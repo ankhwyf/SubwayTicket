@@ -7,64 +7,113 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.worktogether.subwayticket.bean.OrderHistory;
 import com.worktogether.subwayticket.util.Constants;
 import com.worktogether.subwayticket.util.SharedPreferencesUtils;
+import com.wx.wheelview.adapter.ArrayWheelAdapter;
+import com.wx.wheelview.widget.WheelView;
 
 import org.json.JSONArray;
 
-import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import cn.bmob.v3.Bmob;
-import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.QueryListener;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     Boolean isLogin=false;
     Integer count=1;
 
-    @BindView(R.id.pay_btn)
-    Button mBtnPay;
+    private Button mBtnPay;
+    private TextView mTvSelectArrived;
+    private TextView mTvSelectDepart;
+    private TextView mTvTicketCount;
+    private LinearLayout mLayoutExit;
+    private TextView mTvOrderList;
+    private TextView mTvAdd;
+    private TextView mTvSub;
 
-    @BindView(R.id.select_arrived)
-    TextView mTvSelectArrived;
-
-    @BindView(R.id.select_depart)
-    TextView mTvSelectDepart;
-
-    @BindView(R.id.ticket_count)
-    TextView mTvTicketCount;
+    private WheelView mWheelView;
+    private Button mBtnConfirm;
+    private Button mBtnCancel;
 
     private MyTextWatcher mTextWatcher = new MyTextWatcher();
+
+    private PopupWindow mPopupWindow = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //使BindView可用
-        ButterKnife.bind(this);
+        // 关联控件
+        findViews();
         //监听始终点是否已选择
         initListener();
 
-        //默认初始化
-        Bmob.initialize(this,"9ea43370e3823c7bc07ba1f9e851088a");
+    }
+
+    private void findViews() {
+        mBtnPay = (Button) findViewById(R.id.pay_btn);
+        mTvSelectArrived = (TextView) findViewById(R.id.select_arrived);
+        mTvSelectDepart = (TextView) findViewById(R.id.select_depart);
+        mTvTicketCount = (TextView) findViewById(R.id.ticket_count);
+        mLayoutExit = (LinearLayout) findViewById(R.id.layout_exit);
+        mTvOrderList = (TextView) findViewById(R.id.order_list);
+        mTvAdd = (TextView) findViewById(R.id.add_btn);
+        mTvSub = (TextView) findViewById(R.id.sub_btn);
+    }
+
+    private void initListener() {
+        mTvSelectArrived.addTextChangedListener(mTextWatcher);
+        mTvSelectDepart.addTextChangedListener(mTextWatcher);
+        mLayoutExit.setOnClickListener(this);
+        mTvOrderList.setOnClickListener(this);
+        mTvAdd.setOnClickListener(this);
+        mTvSub.setOnClickListener(this);
+    }
+
+    /**
+     * 显示选择站点的popup windows
+     */
+    private void showPopupWindow() {
+        if (mPopupWindow == null) {
+            View popupView = LayoutInflater.from(this).inflate(R.layout.popup_select_stations_layout, null);
+            PopupWindow window = new PopupWindow(popupView,
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+            mPopupWindow.setTouchable(true);
+            // 点击空白区域，窗口消失
+            mPopupWindow.setOutsideTouchable(true);
+
+            mWheelView = (WheelView) popupView.findViewById(R.id.wv_stations);
+            mBtnConfirm = (Button) popupView.findViewById(R.id.btn_confirm);
+            mBtnCancel = (Button) popupView.findViewById(R.id.btn_cancel);
+
+            // 初始化WheelView
+            initWheelView();
+
+            mBtnConfirm.setOnClickListener(this);
+            mBtnCancel.setOnClickListener(this);
+//            mWheelView.set
+        }
 
     }
 
-    @OnClick({R.id.layout_exit,R.id.select_depart,R.id.select_arrived,R.id.add_btn,R.id.sub_btn,R.id.pay_btn,R.id.order_list})
-    void onClick(View v) {
+    private void initWheelView() {
+
+        if (mWheelView != null) {
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
         switch (v.getId()) {
             //退出登录
             case R.id.layout_exit:
@@ -122,13 +171,13 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(new Intent(MainActivity.this, PayDetailActivity.class));
                 }
                 break;
+            case R.id.btn_confirm:
+
+                break;
+            case R.id.btn_cancel:
+
+                break;
         }
-
-    }
-
-    private void initListener() {
-        mTvSelectArrived.addTextChangedListener(mTextWatcher);
-        mTvSelectDepart.addTextChangedListener(mTextWatcher);
     }
 
     private class MyTextWatcher implements TextWatcher {
