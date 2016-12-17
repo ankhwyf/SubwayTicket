@@ -1,4 +1,4 @@
-package com.worktogether.subwayticket;
+package com.worktogether.subwayticket.bean;
 
 import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.socketio.callback.StringCallback;
