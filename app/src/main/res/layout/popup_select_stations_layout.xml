@@ -12,9 +12,16 @@
         android:background="@drawable/bg_white_round">
 
         <com.wx.wheelview.widget.WheelView
+            android:id="@+id/wv_lines"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <com.wx.wheelview.widget.WheelView
             android:id="@+id/wv_stations"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
     </LinearLayout>
 
     <Button
@@ -27,7 +34,7 @@
         android:background="@drawable/bg_white_round"
         android:text="确定"
         android:textColor="@color/colorLightBlue"
-        android:textSize="24sp" />
+        android:textSize="22sp" />
 
     <Button
         android:id="@+id/btn_cancel"
@@ -39,5 +46,5 @@
         android:background="@drawable/bg_white_round"
         android:text="取消"
         android:textColor="@color/colorLightBlue"
-        android:textSize="24sp" />
+        android:textSize="22sp" />
 </LinearLayout>
