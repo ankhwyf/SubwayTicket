@@ -25,73 +25,123 @@
             android:background="@drawable/bg_logo_round"/>
         <ImageView
             android:src="@drawable/subway"
-            android:layout_width="157dp"
-            android:layout_height="157dp"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            />
+            android:layout_marginTop="36dp"/>
     </RelativeLayout>
-
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:stretchColumns="1">
-
-        <TableRow android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp">
-            <ImageView android:src="@drawable/user"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center_vertical"/>
-            <EditText android:id="@+id/user_tel"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:inputType="number"
-                android:paddingLeft="10dp"
-                android:hint="请输入手机号码"
-                android:textColorHint="#aaa" />
-        </TableRow>
-
-        <TableRow android:layout_marginBottom="20dp">
-            <ImageView android:src="@drawable/passwd"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center_vertical"/>
-            <EditText android:id="@+id/user_passwd"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:inputType="textPassword"
-                android:paddingLeft="10dp"
-                android:hint="请输入密码"
-                android:textColorHint="#aaa" />
-        </TableRow>
-
-        <TableRow android:layout_marginBottom="20dp">
-            <Button android:text="登  录"
-                android:textSize="22dp"
-                android:textColor="#fff"
-                android:layout_span="2"
-                android:background="#48bff5"/>
-        </TableRow>
-    </TableLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="40dp"
+        android:layout_gravity="center_horizontal"
+        android:stretchColumns="1">
+
+            <ImageView
+                android:id="@+id/img_user"
+                android:src="@drawable/user"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"/>
+
+            <EditText
+                android:id="@+id/user_tel"
+                android:layout_width="match_parent"
+                android:layout_toRightOf="@id/img_user"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_centerVertical="true"
+                android:maxLength="11"
+                android:inputType="number"
+                android:maxLines="1"
+                android:paddingLeft="10dp"
+                android:hint="请输入手机号码"
+                android:textSize="15sp"
+                android:textColorHint="#aaa"
+                android:background="@null"
+                />
+
+        </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#555" />
+
+    <RelativeLayout
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <ImageView
+            android:id="@+id/img_pwd"
+            android:src="@drawable/passwd"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"/>
+
+        <ImageView
+            android:id="@+id/img_eye"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/eye"/>
+
+        <EditText
+            android:id="@+id/user_passwd"
+            android:layout_toRightOf="@id/img_pwd"
+            android:layout_toLeftOf="@id/img_eye"
+            android:layout_width="match_parent"
+            android:layout_marginRight="10dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="textPassword"
+            android:paddingLeft="10dp"
+            android:layout_centerVertical="true"
+            android:hint="请输入密码"
+            android:textSize="15sp"
+            android:textColorHint="#aaa"
+            android:background="@null"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#555" />
+
+            <Button
+                android:layout_height="42dp"
+                android:layout_width="match_parent"
+                android:layout_marginTop="25dp"
+                android:id="@+id/login_btn"
+                android:text="登  录"
+                android:textSize="18sp"
+                android:textColor="#fff"
+                android:layout_span="2"
+                android:background="@drawable/bg_pay_btn"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="找回密码？"
-            android:textColor="#aaa"
+            android:textColor="#707070"
             android:layout_alignParentLeft="true"/>
 
         <TextView
+            android:id="@+id/register"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="立即注册"
-            android:textColor="#aaa"
+            android:textColor="@color/colorLightBlue"
             android:layout_alignParentRight="true"/>
     </RelativeLayout>
 </LinearLayout>

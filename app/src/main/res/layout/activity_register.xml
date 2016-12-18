@@ -7,7 +7,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_marginBottom="20dp"
         android:background="#f8f8f8">
 
@@ -17,12 +17,16 @@
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:text="注  册"
-            android:textSize="25dp"
+            android:textSize="22sp"
             android:textStyle="bold"
             android:layout_centerHorizontal="true" />
-
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignParentBottom="true"
+            android:background="#555"
+            android:alpha="0.6"/>
     </RelativeLayout>
-
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -1,7 +1,9 @@
 package com.worktogether.subwayticket;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,9 +14,12 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -78,10 +83,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button mBtnConfirm;
     //popupWindow 弹出框取消按钮
     private Button mBtnCancel;
+    //确认 付款详情
+    private Button mBtnConfirmPay;
+    private TextView mTvConfirmCount;
+    private TextView mTvConfirmMoneyAmount;
+    private TextView mTvConfirmPhone;
+    private ImageView mIvCancelPay;
     //监听起点终点是否已选择
     private MyTextWatcher mTextWatcher = new MyTextWatcher();
     //popupWindow 弹出框
     private PopupWindow mPopupWindow = null;
+    private PopupWindow mPopupConfirmPayWindow = null;
     //站点ArrayList
     private List<String> mStationListOne = new ArrayList<>();
     private List<String> mStationListFour= new ArrayList<>();
@@ -130,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mTvSelectArrived.addTextChangedListener(mTextWatcher);
         mTvSelectDepart.addTextChangedListener(mTextWatcher);
         mLayoutExit.setOnClickListener(this);
+        mBtnPay.setOnClickListener(this);
         mTvOrderList.setOnClickListener(this);
         mTvAdd.setOnClickListener(this);
         mTvSub.setOnClickListener(this);
@@ -153,7 +166,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             mBtnConfirm = (Button) popupView.findViewById(R.id.btn_confirm);
             mBtnCancel = (Button) popupView.findViewById(R.id.btn_cancel);
-
             // 初始化WheelView
             initWheelView(popupView);
 
@@ -163,7 +175,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mPopupWindow.showAtLocation(MainActivity.this.findViewById(R.id.activity_main), Gravity.BOTTOM, 0, 0);
     }
+    private void showPopupConfirmPayWindow() {
+        //若为空，则将mPopupWindow实例化
+        if (mPopupConfirmPayWindow == null) {
+            //显示popup_select_stations_layout布局
+            View popupView = LayoutInflater.from(this).inflate(R.layout.popup_confirm_pay_detail, null);
+            mPopupConfirmPayWindow = new PopupWindow(popupView,
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+            mPopupConfirmPayWindow.setTouchable(true);
+            // 点击空白区域，窗口消失
+            mPopupConfirmPayWindow.setOutsideTouchable(true);
+            mBtnConfirmPay = (Button) popupView.findViewById(R.id.confirm_pay_btn);
+            mTvConfirmCount=(TextView) popupView.findViewById(R.id.confirm_ticket_count);
+            mTvConfirmMoneyAmount=(TextView)popupView.findViewById(R.id.confirm_money_amount);
+            mTvConfirmPhone=(TextView)popupView.findViewById(R.id.confirm_phone_number);
+            mIvCancelPay=(ImageView)popupView.findViewById(R.id.cancel_pay);
 
+            mTvConfirmCount.setText("杭州地铁单程票"+mCount+" 张");
+            mTvConfirmMoneyAmount.setText((money*mCount)+"元");
+            mBtnConfirmPay.setOnClickListener(this);
+            mIvCancelPay.setOnClickListener(this);
+        }
+
+        mPopupConfirmPayWindow.showAtLocation(MainActivity.this.findViewById(R.id.activity_main), Gravity.BOTTOM, 0, 0);
+    }
     /**
      * 初始化滚轮内容
      */
@@ -267,13 +302,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //获取SharedPreferences中的登录状态 存储至isLogin
                 isLogin = (Boolean) SharedPreferencesUtils.get(this, Constants.KEY_LOGIN_STATUS, Constants.TYPE_BOOLEAN);
                 //若为非登录状态，则启动登录界面的活动
-                if (isLogin == false) {
-                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                }
+//                if (isLogin == false) {
+//                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+//                }
                 //否则跳至支付详情界面
-                else {
-                    startActivity(new Intent(MainActivity.this, PayDetailActivity.class));
-                }
+//                else {
+                        showPopupConfirmPayWindow();
+//                }
                 break;
             case R.id.btn_confirm:
                 mPopupWindow.dismiss();
@@ -293,10 +328,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mArriveSelectedLine=mCurSelectedLine;
                     mArriveSelectedStation=mCurSelectedStation;
                 }
-
+                Log.d("bmob","departStation From btn_confirm："+mDepartSelectedStation);
+                Log.d("bmob","arriveStation From btn_confirm："+mArriveSelectedStation);
                 break;
             case R.id.btn_cancel:
                 mPopupWindow.dismiss();
+                break;
+            case R.id.confirm_pay_btn:
+                startActivity(new Intent(MainActivity.this, PayDetailActivity.class));
+                break;
+            case R.id.cancel_pay:
+                mPopupConfirmPayWindow.dismiss();
                 break;
         }
     }
@@ -377,8 +419,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         double price=0.0,distance=0.0;
         //情况一: 选择同一条线路
         if(departLine==arriveLine){
-            Log.d("bmob","departStation："+mDepartSelectedStation);
-            Log.d("bmob","arriveStation："+mArriveSelectedStation);
+            Log.d("bmob","departStation From calculate："+mDepartSelectedStation);
+            Log.d("bmob","arriveStation From calculate："+mArriveSelectedStation);
             //交换起点和终点
             if(arriveStation<departStation){
                 swap(departStation,arriveStation);
@@ -444,5 +486,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if(temp<=32) price=7.0;
         else if(temp<=40) price=8.0;
         return price;
+    }
+
+    /**
+     * 设置添加屏幕的背景透明度
+     * @param bgAlpha
+     */
+    public void backgroundAlpha(Activity context, float bgAlpha)
+    {
+        WindowManager.LayoutParams lp = context.getWindow().getAttributes();
+        lp.alpha = bgAlpha;
+        context.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        context.getWindow().setAttributes(lp);
     }
 }
