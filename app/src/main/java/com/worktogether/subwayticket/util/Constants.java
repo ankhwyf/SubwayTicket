@@ -13,5 +13,6 @@ public class Constants {
     public static final int TYPE_BOOLEAN = 0x05;
 
     public static final String KEY_LOGIN_STATUS = "login_status";
+    public static final String KEY_USER_ID="user_id";
 
 }

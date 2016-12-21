@@ -1,5 +1,9 @@
 package com.worktogether.subwayticket.bean;
 
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+
 import cn.bmob.v3.BmobObject;
 
 /**
