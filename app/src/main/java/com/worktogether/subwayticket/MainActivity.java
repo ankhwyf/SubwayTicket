@@ -20,6 +20,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.worktogether.subwayticket.bean.OrderHistory;
 import com.worktogether.subwayticket.bean.SubwayLine;
 import com.worktogether.subwayticket.util.Constants;
 import com.worktogether.subwayticket.util.SharedPreferencesUtils;
@@ -36,6 +37,7 @@ import java.util.List;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.QueryListener;
+import cn.bmob.v3.listener.SaveListener;
 
 import static com.worktogether.subwayticket.MyApplication.getIndexOfStation;
 import static com.worktogether.subwayticket.MyApplication.mAllStations;
@@ -93,8 +95,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
    // 选定的站点
     private String mSelectedStation;
-    private  String departName;
-    private  String arriveName;
+    private  String mDepartName;
+    private  String mArriveName;
     // 选定的地铁线路
 //    private int mDepartSelectedLine=0;
 //    private int mArriveSelectedLine=0;
@@ -291,13 +293,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //获取SharedPreferences中的登录状态 存储至isLogin
                 isLogin = (Boolean) SharedPreferencesUtils.get(this, Constants.KEY_LOGIN_STATUS, Constants.TYPE_BOOLEAN);
                 //若为非登录状态，则启动登录界面的活动
-                if (isLogin == false) {
-                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                }
+//                if (isLogin == false) {
+//                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+//                }
                 //否则跳至支付详情界面
-                else {
+//                else {
                         showPopupConfirmPayWindow();
-                }
+//                }
                 break;
             case R.id.btn_confirm:
                 mPopupWindow.dismiss();
@@ -306,7 +308,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     // 选定出发站点的地铁线路和站点名称
 //                    mDepartSelectedLine=mCurSelectedLine;
 //                    mDepartSelectedStation=mCurSelectedStation;
-                    departName=mSelectedStation;
+                    mDepartName=mSelectedStation;
                     mTvSelectDepart.setText( mSelectedStation);
                     mTvSelectDepart.setTextColor(Color.BLACK);
 
@@ -316,7 +318,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     // 选定到达站点的地铁线路和站点名称
 //                    mArriveSelectedLine=mCurSelectedLine;
 //                    mArriveSelectedStation=mCurSelectedStation;
-                    arriveName=mSelectedStation;
+                    mArriveName=mSelectedStation;
                     mTvSelectArrived.setText(mSelectedStation);
                     mTvSelectArrived.setTextColor(Color.BLACK);
                 }
@@ -325,10 +327,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mPopupWindow.dismiss();
                 break;
             case R.id.confirm_pay_btn:
-                Bundle mBundle=new Bundle();
-                //出发站 到达站 总金额 张数 截止日期 订单ID 票的状态
+                final Bundle mBundle=new Bundle();
+                //出发站 到达站 总金额 张数 创建日期 订单ID 票的状态
+                final OrderHistory mCurOrder=new OrderHistory();
+                mCurOrder.setDepart_station_name(mDepartName);
+                mCurOrder.setArrive_station_name(mArriveName);
+                mCurOrder.setTicket_price(money*mCount);
+                mCurOrder.setTicket_count(mCount);
+                mCurOrder.setTicket_status(0);//0 表示未取票
+                mCurOrder.save(new SaveListener<String>() {
+                    @Override
+                    public void done(String s, BmobException e) {
+                        if(e==null){
+//                            Toast.makeText(getApplicationContext(),"创建成功！"+s,Toast.LENGTH_SHORT).show();
+                            mBundle.putString("departStation",mDepartName);
+                            mBundle.putString("arriveStation",mArriveName);
+                            mBundle.putDouble("totalMoney",money*mCount);
+                            mBundle.putInt("ticketCount",mCount);
+                            //exp: 2016-12-21 20:51:18
+                            mBundle.putString("orderDeadline",mCurOrder.getCreatedAt());
+                            mBundle.putString("orderID",s);
+                            mBundle.putInt("ticketStatus",0);
 
-                startActivity(new Intent(MainActivity.this, PayDetailActivity.class));
+                            Intent intent=new Intent();
+                            intent.setClass(MainActivity.this,PayDetailActivity.class);
+                            intent.putExtras(mBundle);
+                            startActivity(intent);
+
+                        }else {
+                            Log.d("bmob","失败"+e.getMessage()+","+e.getErrorCode());
+                        }
+                    }
+                });
                 break;
             case R.id.cancel_pay:
                 mPopupConfirmPayWindow.dismiss();
@@ -354,10 +384,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             else {
                 mBtnPay.setEnabled(true);
-                departName=mTvSelectDepart.getText().toString();
-                arriveName=mTvSelectArrived.getText().toString();
-                int i=getIndexOfStation(depart);
-                int j=getIndexOfStation(arriveName);
+                mDepartName=mTvSelectDepart.getText().toString();
+                mArriveName=mTvSelectArrived.getText().toString();
+                int i=getIndexOfStation(mDepartName);
+                int j=getIndexOfStation(mArriveName);
                 if(i>j){
                     int temp=i;
                     i=j;
