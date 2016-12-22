@@ -54,9 +54,8 @@ public class MyApplication extends Application {
         //默认初始化
         Bmob.initialize(this,"9ea43370e3823c7bc07ba1f9e851088a");
 
-
-        queryLine(LINEFOUR,mSubwayLineFourList,mStationListFour);
         queryLine(LINEONE,mSubwayLineOneList,mStationListOne);
+        queryLine(LINEFOUR,mSubwayLineFourList,mStationListFour);
 
         //ArrayList
         if (mLineList.size() == 0) {
@@ -100,7 +99,7 @@ public class MyApplication extends Application {
                             e1.printStackTrace();
                         }
                     }//结束loop
-
+                    //  查询完毕，计算距离
                    if(count==2){
                        CalDistance();
                    }
@@ -156,19 +155,23 @@ public class MyApplication extends Application {
         for(i=0;i<mSizeOne-1;i++){
             dis=mSubwayLineOneList.get(i+1).getDistance();
             mStationDistance.get(i).set(i+1,dis);
+            mStationDistance.get(i+1).set(i,dis);
         }
         //近江-->城星路
         dis=mSubwayLineFourList.get(1).getDistance();
         mStationDistance.get(5).set(mSizeOne,dis);
+        mStationDistance.get(mSizeOne).set(5,dis);
 
         for(i=mSizeOne;i<mAllSize-1;i++){
             dis=mSubwayLineFourList.get((i+1)%mSizeOne+1).getDistance();
             mStationDistance.get(i).set(i+1,dis);
+            mStationDistance.get(i+1).set(i,dis);
         }
         //i=34
         //新风-->火车东站
         dis=mSubwayLineFourList.get((i+1)%mSizeOne+1).getDistance();
         mStationDistance.get(i).set(15,dis);
+        mStationDistance.get(15).set(i,dis);
 
         //计算
         Floyd(mAllSize);
@@ -184,4 +187,5 @@ public class MyApplication extends Application {
         }
         return index;
     }
+
 }

@@ -49,6 +49,7 @@ import static com.worktogether.subwayticket.MyApplication.mStationListOne;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Boolean isLogin=false;
+    private String mUserPhone;
     private int mCount=1;
     public double money=0.0;
 
@@ -98,14 +99,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private  String mDepartName;
     private  String mArriveName;
     // 选定的地铁线路
-//    private int mDepartSelectedLine=0;
-//    private int mArriveSelectedLine=0;
-//    private int mDepartSelectedStation=0;
-//    private int mArriveSelectedStation=0;
     private int mCurSelectedLine=0;
     private int mCurSelectedStation=0;
 
     private int mSelectedType = TYPE_START;
+
 
 
 
@@ -179,6 +177,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mPopupConfirmPayWindow.setTouchable(true);
             // 点击空白区域，窗口消失
             mPopupConfirmPayWindow.setOutsideTouchable(true);
+
             mBtnConfirmPay = (Button) popupView.findViewById(R.id.confirm_pay_btn);
             mTvConfirmCount=(TextView) popupView.findViewById(R.id.confirm_ticket_count);
             mTvConfirmMoneyAmount=(TextView)popupView.findViewById(R.id.confirm_money_amount);
@@ -186,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mIvCancelPay=(ImageView)popupView.findViewById(R.id.cancel_pay);
 
             mTvConfirmCount.setText("杭州地铁单程票"+mCount+" 张");
-            mTvConfirmMoneyAmount.setText((money*mCount)+"元");
+            mTvConfirmMoneyAmount.setText(mTvMoney.getText()+"元");
             mBtnConfirmPay.setOnClickListener(this);
             mIvCancelPay.setOnClickListener(this);
         }
@@ -198,21 +197,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void initWheelView(View view) {
 
-        //站点Wheel
-        if (mWheelStations == null) {
-            mWheelStations = (WheelView) view.findViewById(R.id.wv_stations);
-            mWheelStations.setWheelAdapter(new ArrayWheelAdapter(this));
-            //设置滚轮主题
-            mWheelStations.setSkin(WheelView.Skin.Holo);
-            mWheelStations.setWheelData(mStationListOne);
-            mWheelStations.setOnWheelItemSelectedListener(new WheelView.OnWheelItemSelectedListener() {
-                @Override
-                public void onItemSelected(int position, Object o) {
-//                    mCurSelectedStation=position;
-                    mSelectedStation = (String) o;
-                }
-            });
-        }
+
         //地铁线路Wheel
         if (mWheelLines == null) {
             mWheelLines = (WheelView) view.findViewById(R.id.wv_lines);
@@ -225,18 +210,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mWheelLines.setOnWheelItemSelectedListener(new WheelView.OnWheelItemSelectedListener() {
                 @Override
                 public void onItemSelected(int position, Object o) {
-//                    mCurSelectedLine=position;
-                    //地铁一号线
+                    mCurSelectedLine=position;
                     if(position==0){
                         mWheelStations.setWheelData(mStationListOne);
                     }
-                    //地铁四号线
                     else {
                         mWheelStations.setWheelData(mStationListFour);
                     }
                 }
             });
         }
+
+        //站点Wheel
+        if (mWheelStations == null) {
+            mWheelStations = (WheelView) view.findViewById(R.id.wv_stations);
+            mWheelStations.setWheelAdapter(new ArrayWheelAdapter(this));
+            //设置滚轮主题
+            mWheelStations.setSkin(WheelView.Skin.Holo);
+
+            mWheelStations.setWheelData(mStationListOne);
+
+            mWheelStations.setOnWheelItemSelectedListener(new WheelView.OnWheelItemSelectedListener() {
+                @Override
+                public void onItemSelected(int position, Object o) {
+                    if(mCurSelectedLine==0){
+                        mSelectedStation=mStationListOne.get(position);
+                    }
+                    else{
+                        mSelectedStation=mStationListFour.get(position);
+                    }
+//                    mSelectedStation = (String) o;
+                }
+            });
+        }
+
 
     }
 
@@ -327,9 +334,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mPopupWindow.dismiss();
                 break;
             case R.id.confirm_pay_btn:
-                final Bundle mBundle=new Bundle();
                 //出发站 到达站 总金额 张数 创建日期 订单ID 票的状态
                 final OrderHistory mCurOrder=new OrderHistory();
+                mUserPhone=(String) SharedPreferencesUtils.get(this,Constants.KEY_USER_PHONE,Constants.TYPE_STRING);
+                mCurOrder.setUser_phone(mUserPhone);
                 mCurOrder.setDepart_station_name(mDepartName);
                 mCurOrder.setArrive_station_name(mArriveName);
                 mCurOrder.setTicket_price(money*mCount);
@@ -340,6 +348,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void done(String s, BmobException e) {
                         if(e==null){
 //                            Toast.makeText(getApplicationContext(),"创建成功！"+s,Toast.LENGTH_SHORT).show();
+                            Bundle mBundle=new Bundle();
                             mBundle.putString("departStation",mDepartName);
                             mBundle.putString("arriveStation",mArriveName);
                             mBundle.putDouble("totalMoney",money*mCount);
@@ -418,6 +427,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if(temp<=40) price=8.0;
         return price;
     }
-
 
 }
