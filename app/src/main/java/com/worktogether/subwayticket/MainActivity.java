@@ -345,9 +345,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             mBundle.putDouble("totalMoney",money*mCount);
                             mBundle.putInt("ticketCount",mCount);
                             //exp: 2016-12-21 20:51:18
-                            mBundle.putString("orderDeadline",mCurOrder.getCreatedAt());
+                            mBundle.putString("orderCreatedTime",mCurOrder.getCreatedAt());
                             mBundle.putString("orderID",s);
-                            mBundle.putInt("ticketStatus",0);
 
                             Intent intent=new Intent();
                             intent.setClass(MainActivity.this,PayDetailActivity.class);
