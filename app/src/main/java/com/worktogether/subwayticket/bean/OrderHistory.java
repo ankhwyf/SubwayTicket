@@ -9,7 +9,7 @@ import cn.bmob.v3.socketio.callback.StringCallback;
 
 public class OrderHistory extends BmobObject {
     //购买者id
-    private String user_id;
+    private String user_phone;
     //票的状态：0表示未取票 1表示已取票 2表示已退票
     private Integer ticket_status;
     //单票价格
@@ -26,12 +26,13 @@ public class OrderHistory extends BmobObject {
         this.setTableName("order_history");
     }
 
-    public String getUser_id() {
-        return user_id;
+
+    public String getUser_phone() {
+        return user_phone;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public void setUser_phone(String user_phone) {
+        this.user_phone = user_phone;
     }
 
     public Integer getTicket_status() {

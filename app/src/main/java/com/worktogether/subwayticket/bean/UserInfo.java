@@ -12,11 +12,20 @@ public class UserInfo extends BmobObject {
     private  String mobilePhoneNumber;
     private  String password;
     private Boolean mobilePhoneNumberVerified;
+    private String username;
 
     //对应数据库中的表名
    public UserInfo(){
        this.setTableName("_User");
    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public String getMobilePhoneNumber() {
         return mobilePhoneNumber;
