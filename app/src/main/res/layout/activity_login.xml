@@ -33,34 +33,29 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_gravity="center_horizontal"
-        android:stretchColumns="1">
+        android:layout_height="40dp" >
 
-            <ImageView
-                android:id="@+id/img_user"
-                android:src="@drawable/user"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center_vertical"/>
+        <ImageView
+            android:id="@+id/img_user"
+            android:src="@drawable/user"
+            android:layout_width="20dp"
+            android:layout_height="20dp" />
 
-            <EditText
-                android:id="@+id/user_tel"
-                android:layout_width="match_parent"
-                android:layout_toRightOf="@id/img_user"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_centerVertical="true"
-                android:maxLength="11"
-                android:inputType="number"
-                android:maxLines="1"
-                android:paddingLeft="10dp"
-                android:hint="请输入手机号码"
-                android:textSize="15sp"
-                android:textColorHint="#aaa"
-                android:background="@null"
-                />
+        <EditText
+            android:id="@+id/login_tel"
+            android:layout_width="match_parent"
+            android:layout_toRightOf="@id/img_user"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_centerVertical="true"
+            android:maxLength="11"
+            android:inputType="number"
+            android:maxLines="1"
+            android:paddingLeft="10dp"
+            android:hint="请输入手机号码"
+            android:textSize="15sp"
+            android:textColorHint="#aaa"
+            android:background="@null" />
 
         </RelativeLayout>
 
@@ -92,7 +87,7 @@
             android:src="@drawable/eye"/>
 
         <EditText
-            android:id="@+id/user_passwd"
+            android:id="@+id/login_pwd"
             android:layout_toRightOf="@id/img_pwd"
             android:layout_toLeftOf="@id/img_eye"
             android:layout_width="match_parent"
@@ -113,16 +108,16 @@
         android:layout_height="0.5dp"
         android:background="#555" />
 
-            <Button
-                android:layout_height="42dp"
-                android:layout_width="match_parent"
-                android:layout_marginTop="25dp"
-                android:id="@+id/login_btn"
-                android:text="登  录"
-                android:textSize="18sp"
-                android:textColor="#fff"
-                android:layout_span="2"
-                android:background="@drawable/bg_pay_btn"/>
+    <Button
+        android:layout_height="42dp"
+        android:layout_width="match_parent"
+        android:layout_marginTop="25dp"
+        android:id="@+id/login_btn"
+        android:text="登  录"
+        android:textSize="18sp"
+        android:textColor="#fff"
+        android:layout_span="2"
+        android:background="@drawable/bg_pay_btn"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -130,6 +125,7 @@
         android:layout_marginTop="15dp">
 
         <TextView
+            android:id="@+id/findpwd_link"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="找回密码？"
@@ -137,11 +133,12 @@
             android:layout_alignParentLeft="true"/>
 
         <TextView
-            android:id="@+id/register"
+            android:id="@+id/register_link"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="立即注册"
             android:textColor="@color/colorLightBlue"
             android:layout_alignParentRight="true"/>
     </RelativeLayout>
+
 </LinearLayout>

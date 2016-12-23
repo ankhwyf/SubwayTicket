@@ -8,18 +8,19 @@ import cn.bmob.v3.socketio.callback.StringCallback;
  */
 
 public class OrderHistory extends BmobObject {
-    //购买者id
+    //购买者电话号码
     private String user_phone;
     //票的状态：0表示未取票 1表示已取票 2表示已退票
     private Integer ticket_status;
-    //单票价格
+    //总价
     private Double ticket_price;
     //票数
     private Integer ticket_count;
-    //始发站ID
+    //始发站名
     private String depart_station_name;
-    //到达站ID
+    //到达站名
     private String arrive_station_name;
+
 
     //对应数据库中的表名
     public OrderHistory(){
