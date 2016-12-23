@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
+    <!--火车票信息(出发站-到达站/火车票状态/张数/总金额/订单生成时间)-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -11,6 +12,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginLeft="10dp"
         android:layout_weight="1">
+        <!--出发站-到达站/火车票状态-->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -20,11 +22,13 @@
                 android:layout_height="wrap_content"
                 android:text="火车东站-打铁关"/>
             <TextView
+                android:id="@+id/noticket_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:text="未取票"/>
         </RelativeLayout>
+        <!--张数/总金额/订单生成时间-->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -50,7 +54,7 @@
 
     </LinearLayout>
 
-    <!--更多图标-->
+    <!--更多">"图标-->
     <LinearLayout
         android:layout_width="70dp"
         android:layout_height="30dp"
