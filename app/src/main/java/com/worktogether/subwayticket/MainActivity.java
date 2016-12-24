@@ -259,13 +259,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.order_list:
                 //获取SharedPreferences中的登录状态 存储至isLogin
                 isLogin = (Boolean) SharedPreferencesUtils.get(this, Constants.KEY_LOGIN_STATUS, Constants.TYPE_BOOLEAN);
-                //若为非登录状态，则启动登录界面的活动
-                if (isLogin == false) {
-                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                }
-                //否则跳至历史订单记录界面
-                else
-                    startActivity(new Intent(MainActivity.this, OrderHistoryActivity.class));
+//                //若为非登录状态，则启动登录界面的活动
+//                if (isLogin == false) {
+//                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+//                }
+//                //否则跳至历史订单记录界面
+//                else
+//                    startActivity(new Intent(MainActivity.this, OrderHistoryActivity.class));
+                startActivity(new Intent(MainActivity.this, OrderHistoryActivity.class));
                 break;
             //出发站
             case R.id.select_depart:
