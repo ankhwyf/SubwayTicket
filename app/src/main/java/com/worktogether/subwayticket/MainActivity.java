@@ -43,7 +43,6 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
 
-import static com.worktogether.subwayticket.LoginActivity.mCurUser;
 import static com.worktogether.subwayticket.MyApplication.getIndexOfStation;
 import static com.worktogether.subwayticket.MyApplication.mLineList;
 import static com.worktogether.subwayticket.MyApplication.mStationDistance;
@@ -52,6 +51,7 @@ import static com.worktogether.subwayticket.MyApplication.mStationListOne;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private BmobUser mCurUser;
     public static Boolean isLogin = false;
     private String mUserPhone;
     private int mCount = 1;
@@ -113,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mCurUser=BmobUser.getCurrentUser();
         // 关联控件
         findViews();
         //监听事件
@@ -258,28 +259,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 isLogin = (Boolean) SharedPreferencesUtils.get(this, Constants.KEY_LOGIN_STATUS, Constants.TYPE_BOOLEAN);
                 Log.d("bmob","isLogin:"+isLogin);
                 //若为登录状态，则跳出弹出框询问是否真的要退出，以免用户重复登录
-//                if(isLogin){
-//                    AlertDialog.Builder publicDialog = new AlertDialog.Builder(MainActivity.this);
-//                    publicDialog.setTitle("提示");
-//                    publicDialog.setIcon(R.drawable.reminder);
-//                    publicDialog.setMessage("确定退出登录？");
-//                    publicDialog.setCancelable(false);
-//                    publicDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            //将当前状态存储至SharedPreferences，登录状态为未登录（false）
-//                            SharedPreferencesUtils.save(MainActivity.this, Constants.KEY_LOGIN_STATUS, false);
-//                            //清除缓存用户对象
-//                            BmobUser.logOut();
-//                            //启动登录界面的活动
-//                            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-//                        }
-//                    });
-//                    publicDialog.show();
-//                } else {
+                if(isLogin){
+                    AlertDialog.Builder publicDialog = new AlertDialog.Builder(MainActivity.this);
+                    publicDialog.setTitle("提示");
+                    publicDialog.setIcon(R.drawable.reminder);
+                    publicDialog.setMessage("确定 "+mCurUser.getMobilePhoneNumber()+" 退出登录？");
+                    publicDialog.setCancelable(false);
+                    publicDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //将当前状态存储至SharedPreferences，登录状态为未登录（false）
+                            SharedPreferencesUtils.save(MainActivity.this, Constants.KEY_LOGIN_STATUS, false);
+                            //清除缓存用户对象
+                            BmobUser.logOut();
+                            //启动登录界面的活动
+                            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                        }
+                    });
+                    publicDialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+                    publicDialog.show();
+                } else {
                     //直接跳转至登录界面
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
-//                }
+                }
                 break;
             //购票记录
             case R.id.order_list:
