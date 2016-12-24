@@ -51,19 +51,19 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private static  final int REGISTER_NO=0x10;
 
     private LinearLayout mLayoutLogin;
-    private EditText etTel;
-    private EditText etPwd;
-    private EditText etPwdConfirm;
-    private EditText etIdentifyCode;
+    private EditText et_tel;
+    private EditText et_pwd;
+    private EditText et_pwd_confirm;
+    private EditText et_identify_code;
 
-    private Button btnGetIdentifyCode;
-    private Button btnRegister;
+    private Button btn_get_identify_code;
+    private Button btn_register;
 
 
-    private String strTel;
-    private String strPwd;
-    private String strPwdConfirm;
-    private String strIdentifyCode;
+    private String str_tel;
+    private String str_pwd;
+    private String str_pwdConfirm;
+    private String str_identifyCode;
 
     final Handler handler = new Handler() {
         @Override
@@ -74,9 +74,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     break;
                 case REGISTER_NO:
                     //70s倒计时
-                    CountDownTimerUtils mCountDownTimerUtils = new CountDownTimerUtils(btnGetIdentifyCode, 70000, 1000);
+                    CountDownTimerUtils mCountDownTimerUtils = new CountDownTimerUtils(btn_get_identify_code, 70000, 1000);
                     mCountDownTimerUtils.start();
-                    SMSSDK.getVerificationCode("86", strTel);
+                    SMSSDK.getVerificationCode("86", str_tel);
                     break;
                 default:
                     int event = msg.arg1;
@@ -87,14 +87,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         //验证码验证成功
                         if(event==SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
                             BmobUser bu = new BmobUser();
-                            strTel = etTel.getText().toString().trim();
-                            strPwd = etPwd.getText().toString().trim();
+                            str_tel = et_tel.getText().toString().trim();
+                            str_pwd = et_pwd.getText().toString().trim();
                             //对密码进行加密存储
-                            strPwd=encryption(strPwd);
+                            str_pwd=encryption(str_pwd);
 
-                            bu.setUsername(strTel);
-                            bu.setPassword(strPwd);
-                            bu.setMobilePhoneNumber(strTel);
+                            bu.setUsername(str_tel);
+                            bu.setPassword(str_pwd);
+                            bu.setMobilePhoneNumber(str_tel);
                             bu.signUp(new SaveListener<BmobUser>() {
                                 @Override
                                 public void done(BmobUser s, BmobException e) {
@@ -134,23 +134,23 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     private void findviews() {
         mLayoutLogin=(LinearLayout)findViewById(R.id.layout_login);
-        etTel = (EditText) findViewById(R.id.register_tel);
-        etPwd = (EditText) findViewById(R.id.register_pwd);
-        etPwdConfirm = (EditText) findViewById(R.id.register_pwd_confirm);
-        etIdentifyCode = (EditText) findViewById(R.id.register_confirm);
+        et_tel = (EditText) findViewById(R.id.register_tel);
+        et_pwd = (EditText) findViewById(R.id.register_pwd);
+        et_pwd_confirm = (EditText) findViewById(R.id.register_pwd_confirm);
+        et_identify_code = (EditText) findViewById(R.id.register_confirm);
 
-        btnGetIdentifyCode = (Button) findViewById(R.id.register_get_identify_code);
-        btnRegister = (Button) findViewById(R.id.register_btn);
+        btn_get_identify_code = (Button) findViewById(R.id.register_get_identify_code);
+        btn_register = (Button) findViewById(R.id.register_btn);
     }
 
     private void addListener() {
-        btnGetIdentifyCode.setOnClickListener(this);
-        btnRegister.setOnClickListener(this);
+        btn_get_identify_code.setOnClickListener(this);
+        btn_register.setOnClickListener(this);
         mLayoutLogin.setOnClickListener(this);
     }
 
 
-    public String encryption(String plaintext) {
+    public static String encryption(String plaintext) {
 
         String hashtext = null;
         try {
@@ -181,9 +181,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             //注册btn
             case R.id.register_btn:
                 if (confirmInvalid()) {
-                    strTel = etTel.getText().toString().trim();
-                    strIdentifyCode=etIdentifyCode.getText().toString().trim();
-                    SMSSDK.submitVerificationCode("86", strTel,strIdentifyCode );
+                    str_tel = et_tel.getText().toString().trim();
+                    str_identifyCode=et_identify_code.getText().toString().trim();
+                    SMSSDK.submitVerificationCode("86", str_tel,str_identifyCode );
                 }
                 break;
 
@@ -221,25 +221,25 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
      */
     public Boolean confirmInvalid() {
         boolean flag = false;
-        strTel = etTel.getText().toString().trim();
-        strPwd = etPwd.getText().toString().trim();
-        strPwdConfirm = etPwdConfirm.getText().toString().trim();
-        strIdentifyCode = etIdentifyCode.getText().toString().trim();
-        if (strTel.equals("")) {
+        str_tel = et_tel.getText().toString().trim();
+        str_pwd = et_pwd.getText().toString().trim();
+        str_pwdConfirm = et_pwd_confirm.getText().toString().trim();
+        str_identifyCode = et_identify_code.getText().toString().trim();
+        if (str_tel.equals("")) {
             toast("请输入手机号码");
-        } else if (!isMobile(strTel)) {
+        } else if (!isMobile(str_tel)) {
             toast("请输入正确的手机号码");
-        } else if (strPwd.equals("")) {
+        } else if (str_pwd.equals("")) {
             toast("请输入密码");
-        } else if (!isPassword(strPwd)) {
+        } else if (!isPassword(str_pwd)) {
             toast("请输入合法的密码");
-        } else if (strPwdConfirm.equals("")) {
+        } else if (str_pwdConfirm.equals("")) {
             toast("请输入确认密码");
-        } else if (!strPwdConfirm.equals(strPwd)) {
+        } else if (!str_pwdConfirm.equals(str_pwd)) {
             toast("两次密码输入不一致");
-        } else if (strIdentifyCode.equals("")) {
+        } else if (str_identifyCode.equals("")) {
             toast("请输入验证码");
-        } else if (strIdentifyCode.length() != 4) {
+        } else if (str_identifyCode.length() != 4) {
             toast("请输入4位验证码");
         } else {
             flag = true;
@@ -251,15 +251,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
      * 校验手机号码
      */
     public void confirmIdentifyCode() {
-        strTel = etTel.getText().toString().trim();
-        if (strTel.equals("")) {
+        str_tel = et_tel.getText().toString().trim();
+        if (str_tel.equals("")) {
             toast("请输入手机号码");
-        } else if (!isMobile(strTel)) {
+        } else if (!isMobile(str_tel)) {
             toast("请输入正确的手机号码");
         } else {
             BmobQuery<BmobUser> query = new BmobQuery<>();
             //查询mobilePhoneNumber= “strTel”的数据
-            query.addWhereEqualTo("mobilePhoneNumber", strTel);
+            query.addWhereEqualTo("mobilePhoneNumber", str_tel);
             query.findObjects(new FindListener<BmobUser>() {
                 @Override
                 public void done(List<BmobUser> list, BmobException e) {
@@ -270,6 +270,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                             handler.sendEmptyMessage(REGISTER_NO);
                         }
                     } else {
+                        toast("抱歉，请稍候重试！");
                         Log.d("bmob", "失败 from confirmIdentifyCode：" + e.getMessage() + ", " + e.getErrorCode());
                     }
                 }
@@ -320,7 +321,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         super.onDestroy();
     }
 
-    private void publicDialog(String title,int iconID,String message) {
+    public void publicDialog(String title, int iconID, String message) {
 
         AlertDialog.Builder  publicDialog = new AlertDialog.Builder(RegisterActivity.this);
 

@@ -1,9 +1,12 @@
 package com.worktogether.subwayticket;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -35,12 +38,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
 
+import static com.worktogether.subwayticket.LoginActivity.mCurUser;
 import static com.worktogether.subwayticket.MyApplication.getIndexOfStation;
-import static com.worktogether.subwayticket.MyApplication.mAllStations;
 import static com.worktogether.subwayticket.MyApplication.mLineList;
 import static com.worktogether.subwayticket.MyApplication.mStationDistance;
 import static com.worktogether.subwayticket.MyApplication.mStationListFour;
@@ -48,7 +52,7 @@ import static com.worktogether.subwayticket.MyApplication.mStationListOne;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Boolean isLogin = false;
+    public static Boolean isLogin = false;
     private String mUserPhone;
     private int mCount = 1;
     public double money = 0.0;
@@ -250,21 +254,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             //退出登录
             case R.id.layout_exit:
-                //将当前状态存储至SharedPreferences，登录状态为未登录（false）
-                SharedPreferencesUtils.save(this, Constants.KEY_LOGIN_STATUS, false);
-                //启动登录界面的活动
+                //获取SharedPreferences中的登录状态 存储至isLogin
+                isLogin = (Boolean) SharedPreferencesUtils.get(this, Constants.KEY_LOGIN_STATUS, Constants.TYPE_BOOLEAN);
+                Log.d("bmob","isLogin:"+isLogin);
+                //若为登录状态，则跳出弹出框询问是否真的要退出，以免用户重复登录
+//                if(isLogin){
+//                    AlertDialog.Builder publicDialog = new AlertDialog.Builder(MainActivity.this);
+//                    publicDialog.setTitle("提示");
+//                    publicDialog.setIcon(R.drawable.reminder);
+//                    publicDialog.setMessage("确定退出登录？");
+//                    publicDialog.setCancelable(false);
+//                    publicDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            //将当前状态存储至SharedPreferences，登录状态为未登录（false）
+//                            SharedPreferencesUtils.save(MainActivity.this, Constants.KEY_LOGIN_STATUS, false);
+//                            //清除缓存用户对象
+//                            BmobUser.logOut();
+//                            //启动登录界面的活动
+//                            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+//                        }
+//                    });
+//                    publicDialog.show();
+//                } else {
+                //直接跳转至登录界面
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
+//                }
                 break;
             //购票记录
             case R.id.order_list:
                 //获取SharedPreferences中的登录状态 存储至isLogin
                 isLogin = (Boolean) SharedPreferencesUtils.get(this, Constants.KEY_LOGIN_STATUS, Constants.TYPE_BOOLEAN);
-                //若为非登录状态，则启动登录界面的活动
+//                //若为非登录状态，则启动登录界面的活动
                 if (isLogin == false) {
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 }
-                //否则跳至历史订单记录界面
                 else {
+                    //否则跳至历史订单记录界面
                     startActivity(new Intent(MainActivity.this, OrderHistoryActivity.class));
                 }
                 break;
@@ -331,8 +357,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.confirm_pay_btn:
                 //出发站 到达站 总金额 张数 创建日期 订单ID 票的状态
                 final OrderHistory mCurOrder = new OrderHistory();
-                mUserPhone = (String) SharedPreferencesUtils.get(this, Constants.KEY_USER_PHONE, Constants.TYPE_STRING);
-                mCurOrder.setUser_phone(mUserPhone);
+                mCurOrder.setUser_phone(mCurUser.getMobilePhoneNumber());
                 mCurOrder.setDepart_station_name(mDepartName);
                 mCurOrder.setArrive_station_name(mArriveName);
                 mCurOrder.setTicket_price(money * mCount);
