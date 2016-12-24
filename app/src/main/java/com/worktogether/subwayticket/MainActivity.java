@@ -298,13 +298,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //获取SharedPreferences中的登录状态 存储至isLogin
                 isLogin = (Boolean) SharedPreferencesUtils.get(this, Constants.KEY_LOGIN_STATUS, Constants.TYPE_BOOLEAN);
                 //若为非登录状态，则启动登录界面的活动
-//                if (isLogin == false) {
-//                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-//                }
+                if (isLogin == false) {
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                }
                 //否则跳至支付详情界面
-//                else {
+                else {
                 showPopupConfirmPayWindow();
-//                }
+                }
                 break;
             case R.id.btn_confirm:
                 mPopupWindow.dismiss();

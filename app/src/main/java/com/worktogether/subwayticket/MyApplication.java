@@ -16,6 +16,7 @@ import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.QueryListener;
+import cn.smssdk.SMSSDK;
 
 /**
  * Created by Ankhwyf on 16/12/17.
@@ -52,6 +53,7 @@ public class MyApplication extends Application {
 
         //默认初始化
         Bmob.initialize(this,"9ea43370e3823c7bc07ba1f9e851088a");
+
 
         queryLine(LINEONE,mSubwayLineOneList,mStationListOne);
         queryLine(LINEFOUR,mSubwayLineFourList,mStationListFour);

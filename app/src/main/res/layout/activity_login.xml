@@ -36,18 +36,17 @@
         android:layout_height="40dp" >
 
         <ImageView
-            android:id="@+id/img_user"
             android:src="@drawable/user"
             android:layout_width="20dp"
-            android:layout_height="20dp" />
+            android:layout_height="20dp"
+            android:layout_centerVertical="true" />
 
         <EditText
             android:id="@+id/login_tel"
             android:layout_width="match_parent"
-            android:layout_toRightOf="@id/img_user"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
             android:maxLength="11"
             android:inputType="number"
             android:maxLines="1"
@@ -56,7 +55,6 @@
             android:textSize="15sp"
             android:textColorHint="#aaa"
             android:background="@null" />
-
         </RelativeLayout>
 
     <View
@@ -138,6 +136,7 @@
             android:layout_height="wrap_content"
             android:text="立即注册"
             android:textColor="@color/colorLightBlue"
+            android:textSize="15sp"
             android:layout_alignParentRight="true"/>
     </RelativeLayout>
 

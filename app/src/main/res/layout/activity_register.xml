@@ -9,9 +9,26 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginBottom="20dp"
-        android:background="#f8f8f8"
-        android:layout_marginTop="10dp" >
-
+        android:background="#f8f8f8" >
+        <LinearLayout
+            android:id="@+id/layout_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true">
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/exit"/>
+            <TextView
+                android:layout_width="35dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"
+                android:text="登录"
+                android:textSize="15sp"
+                android:textColor="@color/colorLightBlue"/>
+        </LinearLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,7 +51,7 @@
         android:layout_height="40dp"
         android:layout_marginLeft="46dp"
         android:layout_marginRight="46dp"
-        android:layout_marginTop="10dp" >
+        android:layout_marginTop="20dp" >
 
         <ImageView
             android:id="@+id/img_user"
@@ -63,7 +80,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="0.5dp"
         android:background="#555"
         android:layout_marginLeft="46dp"
         android:layout_marginRight="46dp" />
@@ -76,33 +93,34 @@
         android:layout_marginTop="10dp" >
 
         <ImageView
-            android:id="@+id/img_pwd1"
+            android:id="@+id/img_pwd"
             android:src="@drawable/passwd"
             android:layout_centerVertical="true"
             android:layout_width="20dp"
             android:layout_height="20dp" />
 
         <EditText
-            android:id="@+id/register_pwd1"
+            android:id="@+id/register_pwd"
             android:layout_width="match_parent"
-            android:layout_toRightOf="@id/img_pwd1"
+            android:layout_toRightOf="@id/img_pwd"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_centerVertical="true"
-            android:maxLength="11"
-            android:inputType="number"
+            android:maxLength="20"
             android:maxLines="1"
             android:paddingLeft="10dp"
-            android:hint="请输入8-20位字母、数字、符号"
+            android:hint="请输入6-20位字母、数字、符号"
+            android:inputType="textPassword"
             android:textSize="15sp"
             android:textColorHint="#aaa"
             android:background="@null" />
 
     </RelativeLayout>
 
+
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="0.5dp"
         android:background="#555"
         android:layout_marginLeft="46dp"
         android:layout_marginRight="46dp" />
@@ -116,24 +134,24 @@
         android:layout_marginTop="10dp" >
 
         <ImageView
-            android:id="@+id/img_pwd2"
+            android:id="@id/img_pwd"
             android:src="@drawable/passwd"
             android:layout_centerVertical="true"
             android:layout_width="20dp"
             android:layout_height="20dp" />
 
         <EditText
-            android:id="@+id/register_pwd2"
+            android:id="@+id/register_pwd_confirm"
             android:layout_width="match_parent"
-            android:layout_toRightOf="@id/img_pwd2"
+            android:layout_toRightOf="@id/img_pwd"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_centerVertical="true"
-            android:maxLength="11"
-            android:inputType="number"
+            android:maxLength="20"
             android:maxLines="1"
             android:paddingLeft="10dp"
             android:hint="请再次输入密码"
+            android:inputType="textPassword"
             android:textSize="15sp"
             android:textColorHint="#aaa"
             android:background="@null" />
@@ -142,7 +160,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="0.5dp"
         android:background="#555"
         android:layout_marginLeft="46dp"
         android:layout_marginRight="46dp" />
@@ -168,42 +186,44 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_centerVertical="true"
-            android:maxLength="11"
+            android:maxLength="4"
             android:inputType="number"
             android:maxLines="1"
             android:paddingLeft="10dp"
-            android:hint=" 4 位验证码"
+            android:hint=" 4位验证码"
             android:textSize="15sp"
             android:textColorHint="#aaa"
             android:background="@null" />
 
         <Button
-            android:id="@+id/register_get_confirm_btn"
+            android:id="@+id/register_get_identify_code"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:text="获取验证码"
             android:textColor="#fff"
-            android:background="#29b6f6"
+            android:background="@drawable/bg_pay_btn"
+            android:padding="5dp"
+            android:textSize="13sp"
             android:layout_gravity="center_vertical"/>
 
     </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="0.5dp"
         android:background="#555"
         android:layout_marginLeft="46dp"
         android:layout_marginRight="46dp" />
 
     <Button
+        android:id="@+id/register_btn"
         android:layout_height="42dp"
         android:layout_width="match_parent"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="46dp"
         android:layout_marginRight="46dp"
-        android:id="@+id/register_btn"
         android:text="注  册"
         android:textSize="18sp"
         android:textColor="#fff"
