@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private MyTextWatcher mTextWatcher = new MyTextWatcher();
     //popupWindow 弹出框
     private PopupWindow mPopupWindow = null;
-    private PopupWindow mPopupConfirmPayWindow=null;
+    private PopupWindow mPopupConfirmPayWindow = null;
 
     // 选定的站点
     private String mSelectedStation;
@@ -227,13 +227,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     int stationSelection = mWheelStations.getCurrentPosition();
 
                     if (position == 0) {
-                        if(stationSelection>mStationListOne.size()-1) {
+                        if (stationSelection > mStationListOne.size() - 1) {
                             stationSelection = mStationListOne.size() - 1;
                         }
                         mSelectedStation = mStationListOne.get(stationSelection);
                         mWheelStations.setWheelData(mStationListOne);
                     } else {
-                        if(stationSelection>mStationListFour.size()-1) {
+                        if (stationSelection > mStationListFour.size() - 1) {
                             stationSelection = mStationListFour.size() - 1;
                         }
                         mSelectedStation = mStationListFour.get(stationSelection);
@@ -259,14 +259,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.order_list:
                 //获取SharedPreferences中的登录状态 存储至isLogin
                 isLogin = (Boolean) SharedPreferencesUtils.get(this, Constants.KEY_LOGIN_STATUS, Constants.TYPE_BOOLEAN);
-//                //若为非登录状态，则启动登录界面的活动
-//                if (isLogin == false) {
-//                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-//                }
-//                //否则跳至历史订单记录界面
-//                else
-//                    startActivity(new Intent(MainActivity.this, OrderHistoryActivity.class));
-                startActivity(new Intent(MainActivity.this, OrderHistoryActivity.class));
+                //若为非登录状态，则启动登录界面的活动
+                if (isLogin == false) {
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                }
+                //否则跳至历史订单记录界面
+                else {
+                    startActivity(new Intent(MainActivity.this, OrderHistoryActivity.class));
+                }
                 break;
             //出发站
             case R.id.select_depart:
@@ -304,7 +304,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 //否则跳至支付详情界面
                 else {
-                showPopupConfirmPayWindow();
+                    showPopupConfirmPayWindow();
                 }
                 break;
             case R.id.btn_confirm:
@@ -364,7 +364,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
                 break;
             case R.id.cancel_pay:
-               mPopupConfirmPayWindow.dismiss();
+                mPopupConfirmPayWindow.dismiss();
                 break;
         }
     }
