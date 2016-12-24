@@ -9,7 +9,7 @@
         <ListView
             android:id="@+id/history_all_listview"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="match_parent"
             android:paddingBottom="10dp"
             android:background="#fff">
         </ListView>

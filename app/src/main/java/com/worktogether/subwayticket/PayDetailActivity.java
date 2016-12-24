@@ -39,8 +39,6 @@ public class PayDetailActivity extends AppCompatActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pay_detail);
 
-//        Log.d("111", "11111");
-
         detailsTitleBack = (TextView) findViewById(R.id.details_title_back);
         departToArrive = (TextView) findViewById(R.id.depart_to_arrive);
         ticketPrice = (TextView) findViewById(R.id.ticket_price);
@@ -105,7 +103,7 @@ public class PayDetailActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View view){
         switch(view.getId()){
             case R.id.details_title_back:
-//                //启动登录界面的活动
+//                //启动主界面(购票界面)的活动
 //                startActivity(new Intent(PayDetailActivity.this, MainActivity.class));
                 //启动历史记录界面的活动
                 startActivity(new Intent(PayDetailActivity.this, OrderHistoryActivity.class));
