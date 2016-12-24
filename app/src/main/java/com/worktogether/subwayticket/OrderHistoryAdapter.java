@@ -1,6 +1,5 @@
 package com.worktogether.subwayticket;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.worktogether.subwayticket.R;
 import com.worktogether.subwayticket.bean.OrderHistory;
 
 import java.util.List;
@@ -48,7 +46,7 @@ public class OrderHistoryAdapter extends ArrayAdapter<OrderHistory> {
         // 订单总金额
         String ticketPrice = changeTicketPrice(orderHistory.getTicket_price(),orderHistory.getTicket_count());
         // 订单生成时间
-        String ticketCreatedTime = orderHistory.getObjectId();
+        String ticketCreatedTime = orderHistory.getCreatedAt();
 
         viewHolder.departToArrive.setText(departToArrive);
         viewHolder.ticketStatus.setText(ticketStatus);
@@ -99,3 +97,4 @@ public class OrderHistoryAdapter extends ArrayAdapter<OrderHistory> {
         return ticketPrice;
     }
 }
+

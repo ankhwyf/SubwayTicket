@@ -18,7 +18,7 @@ public class QRCodeUtils {
     /**
      * 生成二维码
      * 参数 context 上下文
-     * 参数 content 二维码内容(订单Id)
+     * 参数 content 二维码内容(订单Id+出发站+到达站+总金额+张数+订单生成时间)
      * 返回生成的二维码图片
      * 抛出 WriterException 生成二维码异常
      */
