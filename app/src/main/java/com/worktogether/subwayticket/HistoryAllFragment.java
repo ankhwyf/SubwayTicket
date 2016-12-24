@@ -49,8 +49,11 @@ public class HistoryAllFragment extends Fragment {
 
         historyAllTicketList.clear();
 
-        // 初始化"未取票"碎片ListView
-        initHistoryAllTicketsListView();
+//        // 初始化"所有"碎片ListView
+//        initHistoryAllTicketsListView();
+
+        // 从Bmob中查询并初始化"所有"碎片ListView
+        queryHistoryAll();
 
         HistoryAllFragmentAdapter adapter = new HistoryAllFragmentAdapter(getActivity(),R.layout.activity_all_item,historyAllTicketList);
         Log.d("adapter", String.valueOf(adapter));
@@ -79,7 +82,7 @@ public class HistoryAllFragment extends Fragment {
 
     }
 
-    // 传入表名和用于存储当前用户"全部"订单信息的List
+    // 查询当前登录用户的所有历史记录
     public void queryHistoryAll(){
         BmobQuery<OrderHistory> allQuery = new BmobQuery<OrderHistory>();
         // 查询user_phone为当前用户的手机号的数据
@@ -92,9 +95,11 @@ public class HistoryAllFragment extends Fragment {
             public void done(List<OrderHistory> list, BmobException e) {
                 if(e == null){
                     Toast.makeText(getApplicationContext(),"查询成功：共"+list.size()+"条数据",Toast.LENGTH_SHORT).show();
-                    for(int i = 0;i<list.size();i++){
-
+                    for(OrderHistory allHistory:list){
+                        historyAllTicketList.add(allHistory);
                     }
+                }else{
+                    Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
                 }
             }
         });
