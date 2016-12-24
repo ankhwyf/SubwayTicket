@@ -258,42 +258,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 isLogin = (Boolean) SharedPreferencesUtils.get(this, Constants.KEY_LOGIN_STATUS, Constants.TYPE_BOOLEAN);
                 Log.d("bmob","isLogin:"+isLogin);
                 //若为登录状态，则跳出弹出框询问是否真的要退出，以免用户重复登录
-                if(isLogin){
-                    AlertDialog.Builder publicDialog = new AlertDialog.Builder(MainActivity.this);
-                    publicDialog.setTitle("提示");
-                    publicDialog.setIcon(R.drawable.reminder);
-                    publicDialog.setMessage("确定退出登录？");
-                    publicDialog.setCancelable(false);
-                    publicDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //将当前状态存储至SharedPreferences，登录状态为未登录（false）
-                            SharedPreferencesUtils.save(MainActivity.this, Constants.KEY_LOGIN_STATUS, false);
-                            //清除缓存用户对象
-                            BmobUser.logOut();
-                            //启动登录界面的活动
-                            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                        }
-                    });
-                    publicDialog.show();
-                } else {
+//                if(isLogin){
+//                    AlertDialog.Builder publicDialog = new AlertDialog.Builder(MainActivity.this);
+//                    publicDialog.setTitle("提示");
+//                    publicDialog.setIcon(R.drawable.reminder);
+//                    publicDialog.setMessage("确定退出登录？");
+//                    publicDialog.setCancelable(false);
+//                    publicDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            //将当前状态存储至SharedPreferences，登录状态为未登录（false）
+//                            SharedPreferencesUtils.save(MainActivity.this, Constants.KEY_LOGIN_STATUS, false);
+//                            //清除缓存用户对象
+//                            BmobUser.logOut();
+//                            //启动登录界面的活动
+//                            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+//                        }
+//                    });
+//                    publicDialog.show();
+//                } else {
                     //直接跳转至登录界面
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                }
+//                }
                 break;
             //购票记录
             case R.id.order_list:
                 //获取SharedPreferences中的登录状态 存储至isLogin
                 isLogin = (Boolean) SharedPreferencesUtils.get(this, Constants.KEY_LOGIN_STATUS, Constants.TYPE_BOOLEAN);
 //                //若为非登录状态，则启动登录界面的活动
-//                if (isLogin == false) {
-//                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-//                }
-//                //否则跳至历史订单记录界面
-//                else {
-//                    startActivity(new Intent(MainActivity.this, OrderHistoryActivity.class));
-//                }
-                startActivity(new Intent(MainActivity.this, OrderHistoryActivity.class));
+                if (isLogin == false) {
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                }
+                else {
+                    //否则跳至历史订单记录界面
+                    startActivity(new Intent(MainActivity.this, OrderHistoryActivity.class));
+                }
                 break;
             //出发站
             case R.id.select_depart:

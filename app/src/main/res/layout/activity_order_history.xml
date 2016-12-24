@@ -9,34 +9,43 @@
     tools:context="com.worktogether.subwayticket.OrderHistoryActivity">
 
     <!--标题-->
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/layout_title"
         android:layout_width="match_parent"
-        android:layout_height="48dp">
-        <ImageView
-            android:layout_width="18dp"
-            android:layout_height="22dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="15dp"
-            android:src="@drawable/exit"/>
-        <TextView
-            android:id="@+id/history_title_back"
+        android:layout_height="48dp"
+        android:background="@android:color/white">
+
+        <LinearLayout
+            android:id="@+id/layout_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="返回"
-            android:textColor="#29b6f6"
-            android:textSize="16sp"/>
+            android:layout_centerVertical="true">
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="15dp"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/exit"/>
+            <TextView
+                android:id="@+id/history_title_back"
+                android:layout_width="35dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"
+                android:text="返回"
+                android:textSize="15sp"
+                android:textColor="@color/colorLightBlue"/>
+        </LinearLayout>
+
         <TextView
-            android:layout_width="0dip"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            android:paddingLeft="88dp"
+            android:gravity="center"
+            android:layout_centerVertical="true"
             android:text="购票记录"
+            android:textSize="20sp"
             android:textColor="#101010"
-            android:textSize="18sp"
             android:textStyle="bold"/>
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -49,7 +58,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:text="未取票"/>
         <TextView
             android:id="@+id/history_all"
@@ -57,7 +66,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:text="全部"/>
     </LinearLayout>
 
