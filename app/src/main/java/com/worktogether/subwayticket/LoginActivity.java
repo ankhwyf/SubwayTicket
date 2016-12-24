@@ -36,7 +36,6 @@ import static com.worktogether.subwayticket.RegisterActivity.encryption;
 import static com.worktogether.subwayticket.RegisterActivity.isMobile;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
-    public static BmobUser mCurUser;
 
     private EditText et_tel;
     private EditText et_pwd;
@@ -89,6 +88,35 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+    private void testValid() {
+        if (is_account_valid) {
+            str_tel = et_tel.getText().toString();
+            str_pwd = et_pwd.getText().toString();
+            if (TextUtils.isEmpty(str_tel) || TextUtils.isEmpty(str_pwd)) {
+                toast("用户名和密码不能为空！");
+            } else {
+                str_tel = str_tel.trim();
+                str_pwd = str_pwd.trim();
+                String hashpwd = encryption(str_pwd);
+                BmobUser.loginByAccount(str_tel, hashpwd, new LogInListener<BmobUser>() {
+                    @Override
+                    public void done(BmobUser user, BmobException e) {
+                        if (e != null) {
+                            toast("用户名或密码错误");
+                            Log.d("bmob", "查询失败" + e.getMessage() + ", " + e.getErrorCode());
+                        } else if (user != null) {
+                            //将当前状态存储至SharedPreferences，登录状态为登录（true）
+                            SharedPreferencesUtils.save(LoginActivity.this, Constants.KEY_LOGIN_STATUS, true);
+                            toast("登录成功！");
+                            //启动购票界面的活动
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        }
+                    }
+                });
+            }
+        }
+    }
+
     private void testTelValid() {
         str_tel = et_tel.getText().toString();
         if (TextUtils.isEmpty(str_tel)) {
@@ -104,7 +132,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 public void done(List<BmobUser> list, BmobException e) {
                     if (e == null) {
                         if (list.size() > 0) {
-                            is_account_valid = true;
+                            is_account_valid=true;
+                           testValid();
                         } else {
                             AlertDialog.Builder publicDialog = new AlertDialog.Builder(LoginActivity.this);
                             publicDialog.setTitle("提示");
@@ -138,45 +167,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void testValid() {
-        testTelValid();
-        if (is_account_valid) {
-            str_tel = et_tel.getText().toString();
-            str_pwd = et_pwd.getText().toString();
-            if (TextUtils.isEmpty(str_tel) || TextUtils.isEmpty(str_pwd)) {
-                toast("用户名和密码不能为空！");
-            } else {
-                str_tel = str_tel.trim();
-                str_pwd = str_pwd.trim();
-                String hashpwd = encryption(str_pwd);
-                BmobUser.loginByAccount(str_tel, hashpwd, new LogInListener<BmobUser>() {
-                    @Override
-                    public void done(BmobUser user, BmobException e) {
-                        if (e != null) {
-                            toast("抱歉，请稍后重试");
-                            Log.d("bmob", "查询失败" + e.getMessage() + ", " + e.getErrorCode());
-                        } else if (user != null) {
-                            //将当前状态存储至SharedPreferences，登录状态为登录（true）
-                            SharedPreferencesUtils.save(LoginActivity.this, Constants.KEY_LOGIN_STATUS, true);
-                            toast("登录成功！");
-                            //启动购票界面的活动
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                        } else {
-                            toast("用户名或密码错误");
-                        }
-                    }
-                });
-            }
-        }
-    }
-
     @Override
     public void onClick(View v) {
 
         switch (v.getId()) {
 
             case R.id.login_btn: {
-                testValid();
+                testTelValid();
                 break;
             }
 
