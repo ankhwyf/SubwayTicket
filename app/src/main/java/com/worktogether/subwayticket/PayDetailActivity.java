@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.zxing.WriterException;
@@ -19,7 +20,7 @@ import java.util.Date;
 public class PayDetailActivity extends AppCompatActivity implements View.OnClickListener {
 
     // 标题栏中的返回键
-    private TextView detailsTitleBack;
+    private LinearLayout detailsTitleBack;
     // 出发站-到达站
     private TextView departToArrive;
     // 地铁票总金额
@@ -39,7 +40,7 @@ public class PayDetailActivity extends AppCompatActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pay_detail);
 
-        detailsTitleBack = (TextView) findViewById(R.id.details_title_back);
+        detailsTitleBack = (LinearLayout)findViewById(R.id.details_title_back);
         departToArrive = (TextView) findViewById(R.id.depart_to_arrive);
         ticketPrice = (TextView) findViewById(R.id.ticket_price);
         ticketNum = (TextView) findViewById(R.id.ticket_num);

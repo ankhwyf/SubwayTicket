@@ -277,6 +277,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             startActivity(new Intent(MainActivity.this, LoginActivity.class));
                         }
                     });
+                    publicDialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
                     publicDialog.show();
                 } else {
                     //直接跳转至登录界面

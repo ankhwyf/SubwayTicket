@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class OrderHistoryActivity extends AppCompatActivity implements View.OnClickListener {
@@ -19,7 +20,7 @@ public class OrderHistoryActivity extends AppCompatActivity implements View.OnCl
     // "全部"碎片
     private HistoryAllFragment allFragment;
     // "返回"按钮
-    private TextView historyTitleBack;
+    private LinearLayout historyTitleBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +30,7 @@ public class OrderHistoryActivity extends AppCompatActivity implements View.OnCl
         // "未取票"Tab/"全部"Tab/"返回"按钮
         historyNoTicket = (TextView) findViewById(R.id.history_noticket);
         historyAll = (TextView) findViewById(R.id.history_all);
-        historyTitleBack = (TextView) findViewById(R.id.history_title_back);
+        historyTitleBack = (LinearLayout) findViewById(R.id.history_title_back);
 
         // 默认显示"未取票"碎片
         noTicketFragment = new HistoryNoTicketFragment();

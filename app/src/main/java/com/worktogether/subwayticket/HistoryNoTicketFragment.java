@@ -22,15 +22,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
 import static cn.bmob.v3.Bmob.getApplicationContext;
+import static com.worktogether.subwayticket.HistoryAllFragment.historyNoTicketList;
 
 
 public class HistoryNoTicketFragment extends Fragment {
 
-    private List<OrderHistory> historyNoTicketList = new ArrayList<OrderHistory>();
+//    private List<OrderHistory> historyNoTicketList = new ArrayList<OrderHistory>();
     private View view;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,8 +51,8 @@ public class HistoryNoTicketFragment extends Fragment {
 //        // 初始化"未取票"碎片ListView
 //        initHistoryNoTicketsListView();
 
-        // 从Bmob中查询并初始化"未取票"碎片ListView
-        queryHistoryNoTicket();
+//        // 从Bmob中查询并初始化"未取票"碎片ListView
+//        queryHistoryNoTicket();
 
         HistoryNoTicketFragmentAdapter adapter = new HistoryNoTicketFragmentAdapter(getActivity(), R.layout.activity_noticket_item, historyNoTicketList);
         Log.d("adapter", String.valueOf(adapter));
@@ -80,37 +82,40 @@ public class HistoryNoTicketFragment extends Fragment {
 
     }
 
-    public void initHistoryNoTicketsListView() {
-        OrderHistory order1 = new OrderHistory();
-        order1.setDepart_station_name("火车东站");
-        order1.setArrive_station_name("打铁关");
-        order1.setTicket_status(0);
-        order1.setTicket_count(1);
-        order1.setTicket_price(2.00);
-        historyNoTicketList.add(order1);
+//    public void initHistoryNoTicketsListView() {
+//        OrderHistory order1 = new OrderHistory();
+//        order1.setDepart_station_name("火车东站");
+//        order1.setArrive_station_name("打铁关");
+//        order1.setTicket_status(0);
+//        order1.setTicket_count(1);
+//        order1.setTicket_price(2.00);
+//        historyNoTicketList.add(order1);
+//
+//        OrderHistory order2 = new OrderHistory();
+//        order2.setDepart_station_name("江陵路");
+//        order2.setArrive_station_name("西湖文化广场");
+//        order2.setTicket_status(1);
+//        order2.setTicket_count(2);
+//        order2.setTicket_price(8.00);
+//        historyNoTicketList.add(order2);
+//
+//        OrderHistory order3 = new OrderHistory();
+//        order3.setDepart_station_name("景芳");
+//        order3.setArrive_station_name("龙翔桥");
+//        order3.setTicket_status(2);
+//        order3.setTicket_count(3);
+//        order3.setTicket_price(12.00);
+//        historyNoTicketList.add(order3);
+//    }
 
-        OrderHistory order2 = new OrderHistory();
-        order2.setDepart_station_name("江陵路");
-        order2.setArrive_station_name("西湖文化广场");
-        order2.setTicket_status(1);
-        order2.setTicket_count(2);
-        order2.setTicket_price(8.00);
-        historyNoTicketList.add(order2);
-
-        OrderHistory order3 = new OrderHistory();
-        order3.setDepart_station_name("景芳");
-        order3.setArrive_station_name("龙翔桥");
-        order3.setTicket_status(2);
-        order3.setTicket_count(3);
-        order3.setTicket_price(12.00);
-        historyNoTicketList.add(order3);
-    }
-
+    // 查询当前登录用户的"未取票"历史记录
     public void queryHistoryNoTicket() {
         // 每一个查询条件都需要New一个BmobQuery对象
         // and条件1 当前用户的手机号
         BmobQuery<OrderHistory> userPhoneQuery = new BmobQuery<OrderHistory>();
-        String user_phone = (String) SharedPreferencesUtils.get(getActivity(), Constants.KEY_USER_PHONE, Constants.TYPE_STRING);
+        BmobUser mCurUser=BmobUser.getCurrentUser();
+        String user_phone=mCurUser.getMobilePhoneNumber();
+        Log.i("bmob from noTicket ", user_phone);
         userPhoneQuery.addWhereLessThanOrEqualTo("user_phone", user_phone);
         // and条件2 地铁票状态为"未取票"即ticket_status=0
         BmobQuery<OrderHistory> ticketStatusQuery = new BmobQuery<OrderHistory>();
@@ -122,6 +127,7 @@ public class HistoryNoTicketFragment extends Fragment {
         // 查询符合整个and条件的历史记录
         BmobQuery<OrderHistory> query = new BmobQuery<OrderHistory>();
         query.and(ansQueries);
+        Log.i("bmob from noTicket ", String.valueOf(query));
         query.findObjects(new FindListener<OrderHistory>() {
             @Override
             public void done(List<OrderHistory> list, BmobException e) {
@@ -129,9 +135,10 @@ public class HistoryNoTicketFragment extends Fragment {
                     Toast.makeText(getApplicationContext(), "查询成功：共" + list.size() + "条数据", Toast.LENGTH_SHORT).show();
                     for (OrderHistory noTicketHistory : list) {
                         historyNoTicketList.add(noTicketHistory);
+
                     }
                 } else {
-                    Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
+                    Log.i("bmob", "失败： from noTicket " + e.getMessage() + "," + e.getErrorCode());
                 }
             }
         });
