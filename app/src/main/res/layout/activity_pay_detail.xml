@@ -93,7 +93,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="火车东站-打铁关"
                     android:textColor="#fff" />
             </LinearLayout>
             <!--查看路线按钮-->
@@ -133,8 +132,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textColor="#fff"
-                    android:text="2.00"/>
+                    android:textColor="#fff"/>
             </LinearLayout>
             <!--张数-->
             <LinearLayout
@@ -156,8 +154,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textColor="#fff"
-                    android:text="1"/>
+                    android:textColor="#fff"/>
             </LinearLayout>
             <!--类型-->
             <LinearLayout
@@ -202,8 +199,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:textSize="12dp"
-                android:textColor="#fff"
-                android:text="2016-12-15 00:00:00" />
+                android:textColor="#fff" />
         </LinearLayout>
 
     </LinearLayout>
@@ -213,7 +209,7 @@
         android:id="@+id/layout_qr_code"
         android:layout_below="@id/layout_ticket_info"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="260dp"
         android:background="#FFF"
         android:orientation="vertical">
 
@@ -224,8 +220,7 @@
             android:layout_height="45dp"
             android:gravity="center"
             android:textSize="16dp"
-            android:textStyle="bold"
-            android:text="avfbcmhojsijm"/>
+            android:textStyle="bold"/>
         <!--第二行（二维码对应图片）-->
         <ImageView
             android:id="@+id/ticket_QRCode"

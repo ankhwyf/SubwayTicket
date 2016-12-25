@@ -12,26 +12,17 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.worktogether.subwayticket.bean.OrderHistory;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
-
-import static cn.bmob.v3.Bmob.getApplicationContext;
-import static com.worktogether.subwayticket.HistoryAllFragment.historyNoTicketList;
+import static com.worktogether.subwayticket.OrderHistoryActivity.historyNoTicketList;
 
 
 public class HistoryNoTicketFragment extends Fragment {
 
-//    private List<OrderHistory> historyNoTicketList = new ArrayList<OrderHistory>();
-    private View view;
+    public View view;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //把布局加载进来了，通过返回的view就可以查到这个布局里面的id
@@ -44,39 +35,13 @@ public class HistoryNoTicketFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        historyNoTicketList.clear();
-
 //        // 初始化"未取票"碎片ListView
 //        initHistoryNoTicketsListView();
 
 //        // 从Bmob中查询并初始化"未取票"碎片ListView
-//        queryHistoryNoTicket();
+//        OrderHistoryActivity.queryHistoryAll();
 
-        HistoryNoTicketFragmentAdapter adapter = new HistoryNoTicketFragmentAdapter(getActivity(), R.layout.activity_noticket_item, historyNoTicketList);
-        Log.d("adapter", String.valueOf(adapter));
-        ListView listView = (ListView) view.findViewById(R.id.history_notickets_listview);
-        Log.d("listView", String.valueOf(listView));
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                OrderHistory orderHistory = historyNoTicketList.get(position);
-                Bundle mBundle = new Bundle();
-                mBundle.putString("departStation", orderHistory.getDepart_station_name());
-                mBundle.putString("arriveStation", orderHistory.getArrive_station_name());
-                mBundle.putDouble("totalMoney", orderHistory.getTicket_price() * orderHistory.getTicket_count());
-                mBundle.putInt("ticketCount", orderHistory.getTicket_count());
-                //exp: 2016-12-21 20:51:18
-//                mBundle.putString("orderCreatedTime", orderHistory.getCreatedAt());
-                mBundle.putString("orderCreatedTime", "2016-12-21 20:51:18");
-                mBundle.putString("orderID", orderHistory.getObjectId());
-
-                Intent intent = new Intent(getActivity(), PayDetailActivity.class);
-                intent.putExtras(mBundle);
-                startActivity(intent);
-            }
-        });
-
+        setNoTicketHistoryAdapter();
 
     }
 
@@ -106,45 +71,34 @@ public class HistoryNoTicketFragment extends Fragment {
 //        historyNoTicketList.add(order3);
 //    }
 
-    // 查询当前登录用户的"未取票"历史记录
-    public void queryHistoryNoTicket() {
-        // 每一个查询条件都需要New一个BmobQuery对象
-        // and条件1 当前用户的手机号
-        BmobQuery<OrderHistory> userPhoneQuery = new BmobQuery<OrderHistory>();
-
-        BmobUser mCurUser=BmobUser.getCurrentUser();
-        String user_phone=mCurUser.getMobilePhoneNumber();
-        Log.i("bmob from noTicket ", user_phone);
-
-        userPhoneQuery.addWhereLessThanOrEqualTo("user_phone", user_phone);
-        // and条件2 地铁票状态为"未取票"即ticket_status=0
-        BmobQuery<OrderHistory> ticketStatusQuery = new BmobQuery<OrderHistory>();
-        ticketStatusQuery.addWhereLessThanOrEqualTo("ticket_status", 0);
-        // 最后组装完整的and条件
-        List<BmobQuery<OrderHistory>> ansQueries = new ArrayList<BmobQuery<OrderHistory>>();
-        ansQueries.add(userPhoneQuery);
-        ansQueries.add(ticketStatusQuery);
-        // 查询符合整个and条件的历史记录
-        BmobQuery<OrderHistory> query = new BmobQuery<OrderHistory>();
-        query.and(ansQueries);
-        Log.i("bmob from noTicket ", String.valueOf(query));
-        query.findObjects(new FindListener<OrderHistory>() {
+    // 定义"未取票"碎片的自定义适配器
+    public void setNoTicketHistoryAdapter() {
+        HistoryNoTicketFragmentAdapter adapter = new HistoryNoTicketFragmentAdapter(getActivity(), R.layout.activity_noticket_item, historyNoTicketList);
+        Log.d("adapter", String.valueOf(adapter));
+        ListView listView = (ListView) view.findViewById(R.id.history_notickets_listview);
+        Log.d("listView", String.valueOf(listView));
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void done(List<OrderHistory> list, BmobException e) {
-                if (e == null) {
-                    Toast.makeText(getApplicationContext(), "查询成功：共" + list.size() + "条数据", Toast.LENGTH_SHORT).show();
-                    for (OrderHistory noTicketHistory : list) {
-                        historyNoTicketList.add(noTicketHistory);
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                OrderHistory orderHistory = historyNoTicketList.get(position);
+                Bundle mBundle = new Bundle();
+                mBundle.putString("departStation", orderHistory.getDepart_station_name());
+                mBundle.putString("arriveStation", orderHistory.getArrive_station_name());
+                mBundle.putDouble("totalMoney", orderHistory.getTicket_price() * orderHistory.getTicket_count());
+                mBundle.putInt("ticketCount", orderHistory.getTicket_count());
+                //exp: 2016-12-21 20:51:18
+                mBundle.putString("orderCreatedTime", orderHistory.getCreatedAt());
+                mBundle.putString("orderID", orderHistory.getObjectId());
 
-                    }
-                } else {
-                    Log.i("bmob", "失败： from noTicket " + e.getMessage() + "," + e.getErrorCode());
-                }
+                Intent intent = new Intent(getActivity(), PayDetailActivity.class);
+                intent.putExtras(mBundle);
+                startActivity(intent);
             }
         });
-
     }
 
+    // "未取票"碎片的自定义适配器类
     public class HistoryNoTicketFragmentAdapter extends ArrayAdapter<OrderHistory> {
 
         private int resourceId;

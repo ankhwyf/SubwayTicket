@@ -3,11 +3,27 @@ package com.worktogether.subwayticket;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.worktogether.subwayticket.bean.OrderHistory;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.QueryListener;
+
 
 public class OrderHistoryActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -21,6 +37,9 @@ public class OrderHistoryActivity extends AppCompatActivity implements View.OnCl
     private HistoryAllFragment allFragment;
     // "返回"按钮
     private LinearLayout historyTitleBack;
+
+    public static List<OrderHistory> historyAllTicketList = new ArrayList<OrderHistory>();
+    public static List<OrderHistory> historyNoTicketList = new ArrayList<OrderHistory>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +64,12 @@ public class OrderHistoryActivity extends AppCompatActivity implements View.OnCl
         historyAll.setOnClickListener(this);
         // "返回"按钮
         historyTitleBack.setOnClickListener(this);
+
+        // 从Bmob中查询并初始化historyAllTicketList/historyNoTicketList
+        queryHistoryAll();
+
+        // 调用"全部"碎片的自定义适配器
+        HistoryNoTicketFragment.setNoTicketHistoryAdapter();
     }
 
     public void onClick(View view) {
@@ -74,4 +99,62 @@ public class OrderHistoryActivity extends AppCompatActivity implements View.OnCl
         }
         fragmentTransaction.commit();
     }
+
+
+    // 查询当前登录用户的所有历史记录
+    public void queryHistoryAll() {
+
+        historyAllTicketList.clear();
+        historyNoTicketList.clear();
+
+        BmobQuery allQuery = new BmobQuery("order_history");
+
+        // 查询user_phone为当前用户的手机号的数据
+        // 当前用户的手机号
+        BmobUser mCurUser = BmobUser.getCurrentUser();
+        String user_phone = mCurUser.getMobilePhoneNumber();
+
+        allQuery.addWhereEqualTo("user_phone", user_phone);
+        allQuery.setLimit(60);
+
+        // 执行查询方法
+        allQuery.findObjectsByTable(new QueryListener<JSONArray>() {
+            @Override
+            public void done(JSONArray jsonArray, BmobException e) {
+                if (e == null) {
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        Log.i("jsonArray11111111111", String.valueOf(jsonArray.length()));
+                        try {
+                            JSONObject obj = jsonArray.getJSONObject(i);
+                            Integer ticket_status = obj.getInt("ticket_status");
+                            Double ticket_price = obj.getDouble("ticket_price");
+                            Integer ticket_count = obj.getInt("ticket_count");
+                            String depart_station_name = obj.getString("depart_station_name");
+                            String arrive_station_name = obj.getString("arrive_station_name");
+
+                            OrderHistory order = new OrderHistory();
+                            order.setDepart_station_name(depart_station_name);
+                            order.setArrive_station_name(arrive_station_name);
+                            order.setTicket_status(ticket_status);
+                            order.setTicket_price(ticket_price);
+                            order.setTicket_count(ticket_count);
+
+                            historyAllTicketList.add(order);
+
+                            if (ticket_status == 0) {
+                                historyNoTicketList.add(order);
+                            }
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+
+                } else {
+                    Log.i("bmob", "失败：from all " + e.getMessage() + "," + e.getErrorCode());
+                }
+            }
+        });
+
+    }
+
 }

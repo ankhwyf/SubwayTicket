@@ -12,25 +12,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.worktogether.subwayticket.bean.OrderHistory;
 
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.List;
 
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
-import cn.bmob.v3.listener.QueryListener;
+import static com.worktogether.subwayticket.OrderHistoryActivity.historyAllTicketList;
 
-import static cn.bmob.v3.Bmob.getApplicationContext;
 
 /**
  * Created by asus on 2016/12/21.
@@ -38,14 +26,14 @@ import static cn.bmob.v3.Bmob.getApplicationContext;
 
 public class HistoryAllFragment extends Fragment {
 
-    private List<OrderHistory> historyAllTicketList = new ArrayList<OrderHistory>();
-    public static List<OrderHistory> historyNoTicketList = new ArrayList<OrderHistory>();
-    private View view;
+    //    private List<OrderHistory> historyAllTicketList = new ArrayList<OrderHistory>();
+//    public static List<OrderHistory> historyNoTicketList = new ArrayList<OrderHistory>();
+    public View view;
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //把布局加载进来了，通过返回的view就可以查到这个布局里面的id
         //这里一般不会处理问题，只是用来加载view
-        view = inflater.inflate(R.layout.activity_history_all,container,false);
+        view = inflater.inflate(R.layout.activity_history_all, container, false);
         return view;
     }
 
@@ -53,114 +41,13 @@ public class HistoryAllFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        historyAllTicketList.clear();
-
 //        // 初始化"所有"碎片ListView
 //        initHistoryAllTicketsListView();
 
-        // 从Bmob中查询并初始化"所有"碎片ListView
-        queryHistoryAll();
+//        // 从Bmob中查询并初始化"所有"碎片ListView
+//        OrderHistoryActivity.queryHistoryAll();
 
-        HistoryAllFragmentAdapter adapter = new HistoryAllFragmentAdapter(getActivity(),R.layout.activity_all_item,historyAllTicketList);
-        Log.d("adapter", String.valueOf(adapter));
-        ListView listView = (ListView) view.findViewById(R.id.history_all_listview);
-        Log.d("listView", String.valueOf(listView));
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                OrderHistory orderHistory = historyAllTicketList.get(position);
-                Bundle mBundle=new Bundle();
-                mBundle.putString("departStation",orderHistory.getDepart_station_name());
-                mBundle.putString("arriveStation",orderHistory.getArrive_station_name());
-                mBundle.putDouble("totalMoney",orderHistory.getTicket_price()*orderHistory.getTicket_count());
-                mBundle.putInt("ticketCount",orderHistory.getTicket_count());
-                //exp: 2016-12-21 20:51:18
-//                mBundle.putString("orderCreatedTime",orderHistory.getCreatedAt());
-                mBundle.putString("orderCreatedTime","2016-12-21 20:51:18");
-                mBundle.putString("orderID",orderHistory.getObjectId());
-
-                Intent intent=new Intent(getActivity(),PayDetailActivity.class);
-                intent.putExtras(mBundle);
-                startActivity(intent);
-            }
-        });
-
-    }
-
-    // 查询当前登录用户的所有历史记录
-    public void queryHistoryAll(){
-
-        BmobQuery allQuery = new BmobQuery("order_history");
-        // 查询user_phone为当前用户的手机号的数据
-        // 当前用户的手机号
-        BmobUser mCurUser=BmobUser.getCurrentUser();
-        String user_phone=mCurUser.getMobilePhoneNumber();
-//        Log.i("bmob from all ", user_phone);
-
-        allQuery.addWhereEqualTo("user_phone",user_phone);
-        allQuery.setLimit(60);
-        //Log.i("bmob from all ", String.valueOf(allQuery));
-        // 执行查询方法
-       allQuery.findObjectsByTable(new QueryListener<JSONArray>() {
-           @Override
-           public void done(JSONArray jsonArray, BmobException e) {
-               if(e==null){
-                   for(int i =0;i<jsonArray.length();i++){
-                       try {
-                           JSONObject obj = jsonArray.getJSONObject(i);
-                           String depart_station_name = obj.getString("depart_station_name");
-                           String arrive_station_name = obj.getString("arrive_station_name");
-                           Integer ticket_status = obj.getInt("ticket_status");
-                           Double ticket_price = obj.getDouble("ticket_price");
-                           Integer ticket_count = obj.getInt("ticket_count");
-
-                           OrderHistory orderHistory = new OrderHistory();
-                           orderHistory.setDepart_station_name(depart_station_name);
-                           orderHistory.setArrive_station_name(arrive_station_name);
-                           orderHistory.setTicket_status(ticket_status);
-                           orderHistory.setTicket_price(ticket_price);
-                           orderHistory.setTicket_count(ticket_count);
-
-                           historyAllTicketList.add(orderHistory);
-
-                           Log.d("historyAllTicketList", orderHistory.getObjectId());
-                           if(ticket_status ==0){
-                               historyNoTicketList.add(orderHistory);
-                           }
-                       } catch (JSONException e1) {
-                           e1.printStackTrace();
-                       }
-                   }
-               }else{
-                    Log.i("bmob","失败：from all "+e.getMessage()+","+e.getErrorCode());
-                }
-           }
-       });
-
-//        BmobQuery<OrderHistory> allQuery = new BmobQuery<OrderHistory>();
-//        // 查询user_phone为当前用户的手机号的数据
-//        // 当前用户的手机号
-//        BmobUser mCurUser=BmobUser.getCurrentUser();
-//        String user_phone=mCurUser.getMobilePhoneNumber();
-//        Log.i("bmob from all ", user_phone);
-//        allQuery.addWhereEqualTo("user_phone",user_phone);
-//        Log.i("bmob from all ", String.valueOf(allQuery));
-//        // 执行查询方法
-//        allQuery.findObjects(new FindListener<OrderHistory>() {
-//            @Override
-//            public void done(List<OrderHistory> list, BmobException e) {
-//                Log.d("bomb",e.toString());
-//                if(e == null){
-//                    Toast.makeText(getApplicationContext(),"查询成功：共"+list.size()+"条数据",Toast.LENGTH_SHORT).show();
-//                    for(OrderHistory allHistory:list){
-//                        historyAllTicketList.add(allHistory);
-//                    }
-//                }else{
-//                    Log.i("bmob","失败：from all "+e.getMessage()+","+e.getErrorCode());
-//                }
-//            }
-//        });
+        setAllHistoryAdapter();
     }
 
 //    public void initHistoryAllTicketsListView() {
@@ -190,7 +77,36 @@ public class HistoryAllFragment extends Fragment {
 //    }
 
 
-   public class HistoryAllFragmentAdapter extends ArrayAdapter<OrderHistory> {
+    // 定义"全部"碎片的自定义适配器
+    public void setAllHistoryAdapter() {
+        HistoryAllFragmentAdapter adapter = new HistoryAllFragmentAdapter(getActivity(), R.layout.activity_all_item, historyAllTicketList);
+        Log.d("adapter", String.valueOf(adapter));
+        ListView listView = (ListView) view.findViewById(R.id.history_all_listview);
+        Log.d("listView", String.valueOf(listView));
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                OrderHistory orderHistory = historyAllTicketList.get(position);
+                Bundle mBundle = new Bundle();
+                mBundle.putString("departStation", orderHistory.getDepart_station_name());
+                mBundle.putString("arriveStation", orderHistory.getArrive_station_name());
+                mBundle.putDouble("totalMoney", orderHistory.getTicket_price() * orderHistory.getTicket_count());
+                mBundle.putInt("ticketCount", orderHistory.getTicket_count());
+                //exp: 2016-12-21 20:51:18
+                mBundle.putString("orderCreatedTime", orderHistory.getCreatedAt());
+                mBundle.putString("orderID", orderHistory.getObjectId());
+
+                Intent intent = new Intent(getActivity(), PayDetailActivity.class);
+                intent.putExtras(mBundle);
+                startActivity(intent);
+            }
+        });
+
+    }
+
+    // "全部"碎片的自定义适配器类
+    public class HistoryAllFragmentAdapter extends ArrayAdapter<OrderHistory> {
 
         private int resourceId;
 
@@ -223,7 +139,7 @@ public class HistoryAllFragment extends Fragment {
             // 地铁票张数
             String ticketNum = changeTicketNum(orderHistory.getTicket_count());
             // 订单总金额
-            String ticketPrice = changeTicketPrice(orderHistory.getTicket_price(),orderHistory.getTicket_count());
+            String ticketPrice = changeTicketPrice(orderHistory.getTicket_price(), orderHistory.getTicket_count());
             // 订单生成时间
             String ticketCreatedTime = orderHistory.getCreatedAt();
 
@@ -276,4 +192,5 @@ public class HistoryAllFragment extends Fragment {
             return ticketPrice;
         }
     }
+
 }
