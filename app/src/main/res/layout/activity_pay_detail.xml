@@ -209,7 +209,7 @@
         android:id="@+id/layout_qr_code"
         android:layout_below="@id/layout_ticket_info"
         android:layout_width="match_parent"
-        android:layout_height="260dp"
+        android:layout_height="270dp"
         android:background="#FFF"
         android:orientation="vertical">
 

@@ -150,4 +150,10 @@ public class HistoryNoTicketFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+    }
+
+
 }

@@ -114,4 +114,9 @@ public class PayDetailActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+    }
+
 }

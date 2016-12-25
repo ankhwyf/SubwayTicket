@@ -102,6 +102,7 @@ public class OrderHistoryActivity extends AppCompatActivity implements View.OnCl
             // "返回"按钮
             case R.id.history_title_back:
                 startActivity(new Intent(OrderHistoryActivity.this, MainActivity.class));
+                finish();
                 break;
             default:
                 break;
@@ -134,6 +135,8 @@ public class OrderHistoryActivity extends AppCompatActivity implements View.OnCl
                             int ticket_status = obj.getInt("ticket_status");
                             double ticket_price = obj.getDouble("ticket_price");
                             int ticket_count = obj.getInt("ticket_count");
+                            String objectId=obj.getString("objectId");
+                            String createdAt=obj.getString("createdAt");
 
                             OrderHistory orderHistory = new OrderHistory();
                             orderHistory.setDepart_station_name(depart_station_name);
@@ -141,6 +144,8 @@ public class OrderHistoryActivity extends AppCompatActivity implements View.OnCl
                             orderHistory.setTicket_status(ticket_status);
                             orderHistory.setTicket_price(ticket_price);
                             orderHistory.setTicket_count(ticket_count);
+                            orderHistory.setObjectId(objectId);
+//                            orderHistory.setCreatedAt(createdAt);
 
                             historyAllTicketList.add(orderHistory);
 
@@ -168,5 +173,10 @@ public class OrderHistoryActivity extends AppCompatActivity implements View.OnCl
         noTicketTransaction.add(R.id.ticketFrameLayout, noTicketFragment);
         noTicketTransaction.commit();
     }
+
+//    @Override
+//    protected void onDestroy(){
+//        super.onDestroy();
+//    }
 
 }

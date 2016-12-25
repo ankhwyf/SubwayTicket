@@ -172,11 +172,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
        String mUserPhone=mCurUser.getMobilePhoneNumber();
         mUserPhone=mUserPhone.substring(0,3)+"****"+mUserPhone.substring(7,11);
 
+        //监听事件
         mBtnConfirmPay.setOnClickListener(this);
         mIvCancelPay.setOnClickListener(this);
+
+
         mTvConfirmCount.setText("杭州地铁单程票" + mCount + " 张");
         mTvConfirmMoneyAmount.setText(money * mCount + "元");
         mTvConfirmPhone.setText(mUserPhone);
+
+        //mPopupConfirmPayWindow显示的位置
         mPopupConfirmPayWindow.showAtLocation(MainActivity.this.findViewById(R.id.activity_main), Gravity.BOTTOM, 0, 0);
     }
 
@@ -190,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mWheelStations.setWheelAdapter(new ArrayWheelAdapter(this));
             //设置滚轮主题
             mWheelStations.setSkin(WheelView.Skin.Holo);
-
+            //载入一号线地铁站点数据ArrayList
             mWheelStations.setWheelData(mStationListOne);
 
             mWheelStations.setOnWheelItemSelectedListener(new WheelView.OnWheelItemSelectedListener() {
@@ -216,14 +221,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mCurSelectedLine = position;
 
                     int stationSelection = mWheelStations.getCurrentPosition();
-
+                    //为了解决 选择地铁4号线第一个站点显示"湘湖"的问题
+                    //选择的是一号线
                     if (position == 0) {
+                        //若当前所选择的站点数大于一号线的站点数，则将当前的站点数赋值为一号线最后一个站
                         if (stationSelection > mStationListOne.size() - 1) {
                             stationSelection = mStationListOne.size() - 1;
                         }
                         mSelectedStation = mStationListOne.get(stationSelection);
                         mWheelStations.setWheelData(mStationListOne);
-                    } else {
+                    }
+                    //选择的是四号线
+                    else {
+                        //若当前所选择的站点数大于四号线的站点数，则将当前的站点数赋值为四号线最后一个站
                         if (stationSelection > mStationListFour.size() - 1) {
                             stationSelection = mStationListFour.size() - 1;
                         }
@@ -376,6 +386,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /*
+   * 用于判断两个站点是否选择完毕
+   * 若是，则"立即支付"按钮可点击
+   * 否则，mBtnPay.setEnabled(false);
+   * */
     private class MyTextWatcher implements TextWatcher {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -385,19 +400,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             String arrived = mTvSelectArrived.getText().toString().trim();
             String depart = mTvSelectDepart.getText().toString().trim();
+            //判断是否已选择
             if (TextUtils.isEmpty(arrived) || TextUtils.isEmpty(depart)) {
                 mBtnPay.setEnabled(false);
-            } else if (arrived.equals(depart)) {
+            }
+            //判断选择的站点是否相同
+            else if (arrived.equals(depart)) {
                 mBtnPay.setEnabled(false);
                 Toast.makeText(getApplicationContext(), "站点不能相同！", Toast.LENGTH_SHORT).show();
-            } else {
+            }
+            //正确选择
+            //根据所选的站点，获取距离，计算票价，并显示
+            else {
                 mBtnPay.setEnabled(true);
+
                 mDepartName = mTvSelectDepart.getText().toString();
                 mArriveName = mTvSelectArrived.getText().toString();
                 int i = getIndexOfStation(mDepartName);
                 int j = getIndexOfStation(mArriveName);
                 money = calculatePrice(mStationDistance.get(i).get(j));
                 mTvMoney.setText("￥" + (money * mCount));
+
                 int color = ContextCompat.getColor(MainActivity.this, R.color.colorLightRed);
                 mTvMoney.setTextColor(color);
             }
@@ -408,7 +431,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /*
+   *  输入距离（m）
+   *  根据杭州地铁票价计算规则计算票价
+   *  http://www.19lou.com/forum-1601-thread-14901351213759101-1-1.html
+   *  杭州市物价局向社会公布：杭州地铁1号线票价2元起步
+   *  2元可乘4公里，
+   *  4-12公里，每加一元乘4公里；
+   *  4到12公里每1元可乘4公里；
+   * 12到24公里每1元可乘6公里；
+   * 24公里以上每1元可乘8公里。
+   * */
     public double calculatePrice(double distance) {
+        //将距离转换成km为单位的数字
         double temp = distance / 1000;
         double price = 0.0;
         if (temp <= 4) price = 2.0;
@@ -419,6 +454,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if (temp <= 32) price = 7.0;
         else if (temp <= 40) price = 8.0;
         return price;
+    }
+
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
     }
 
 }
