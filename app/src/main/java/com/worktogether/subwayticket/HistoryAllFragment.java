@@ -15,8 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.worktogether.subwayticket.bean.OrderHistory;
-import com.worktogether.subwayticket.util.Constants;
-import com.worktogether.subwayticket.util.SharedPreferencesUtils;
 
 
 import org.json.JSONArray;
@@ -99,6 +97,7 @@ public class HistoryAllFragment extends Fragment {
         BmobUser mCurUser=BmobUser.getCurrentUser();
         String user_phone=mCurUser.getMobilePhoneNumber();
 //        Log.i("bmob from all ", user_phone);
+
         allQuery.addWhereEqualTo("user_phone",user_phone);
         allQuery.setLimit(60);
         //Log.i("bmob from all ", String.valueOf(allQuery));

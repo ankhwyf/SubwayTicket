@@ -15,8 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.worktogether.subwayticket.bean.OrderHistory;
-import com.worktogether.subwayticket.util.Constants;
-import com.worktogether.subwayticket.util.SharedPreferencesUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,9 +111,11 @@ public class HistoryNoTicketFragment extends Fragment {
         // 每一个查询条件都需要New一个BmobQuery对象
         // and条件1 当前用户的手机号
         BmobQuery<OrderHistory> userPhoneQuery = new BmobQuery<OrderHistory>();
+
         BmobUser mCurUser=BmobUser.getCurrentUser();
         String user_phone=mCurUser.getMobilePhoneNumber();
         Log.i("bmob from noTicket ", user_phone);
+
         userPhoneQuery.addWhereLessThanOrEqualTo("user_phone", user_phone);
         // and条件2 地铁票状态为"未取票"即ticket_status=0
         BmobQuery<OrderHistory> ticketStatusQuery = new BmobQuery<OrderHistory>();

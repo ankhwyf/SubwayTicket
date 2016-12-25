@@ -1,9 +1,7 @@
 package com.worktogether.subwayticket;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -20,9 +18,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.worktogether.subwayticket.util.Constants;
-import com.worktogether.subwayticket.util.SharedPreferencesUtils;
 
 import java.util.List;
 
@@ -62,6 +57,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         // add action listen event
         addListener();
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                str_tel = bundle.getString("phone");
+                et_tel.setText(str_tel);
+            }
+        }
     }
 
     private void findviews() {
@@ -105,8 +109,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             toast("用户名或密码错误");
                             Log.d("bmob", "查询失败" + e.getMessage() + ", " + e.getErrorCode());
                         } else if (user != null) {
-                            //将当前状态存储至SharedPreferences，登录状态为登录（true）
-                            SharedPreferencesUtils.save(LoginActivity.this, Constants.KEY_LOGIN_STATUS, true);
                             toast("登录成功！");
                             //启动购票界面的活动
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
@@ -132,8 +134,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 public void done(List<BmobUser> list, BmobException e) {
                     if (e == null) {
                         if (list.size() > 0) {
-                            is_account_valid=true;
-                           testValid();
+                            is_account_valid = true;
+                            testValid();
                         } else {
                             AlertDialog.Builder publicDialog = new AlertDialog.Builder(LoginActivity.this);
                             publicDialog.setTitle("提示");
@@ -181,7 +183,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 //http://blog.csdn.net/wq___1994/article/details/51916667
                 if (is_pwd_visiable) {
                     img_eye.setImageResource(R.drawable.eye);
-                    et_pwd.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD|InputType.TYPE_CLASS_TEXT);
+                    et_pwd.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT);
                 } else {
                     //visible
                     img_eye.setImageResource(R.drawable.noeye);
