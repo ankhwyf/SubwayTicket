@@ -376,8 +376,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             Intent intent = new Intent();
                             intent.setClass(MainActivity.this, PayDetailActivity.class);
                             intent.putExtras(mBundle);
+                            mPopupConfirmPayWindow.dismiss();
                             startActivity(intent);
-
                         } else {
                             Log.d("bmob", "失败" + e.getMessage() + "," + e.getErrorCode());
                         }
@@ -460,8 +460,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return price;
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
 }
