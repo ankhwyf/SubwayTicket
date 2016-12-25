@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,7 @@ import static com.worktogether.subwayticket.OrderHistoryActivity.historyNoTicket
 
 public class HistoryNoTicketFragment extends Fragment {
 
-    public View view;
+    private View view;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //把布局加载进来了，通过返回的view就可以查到这个布局里面的id
@@ -35,48 +34,12 @@ public class HistoryNoTicketFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-//        // 初始化"未取票"碎片ListView
-//        initHistoryNoTicketsListView();
-
-//        // 从Bmob中查询并初始化"未取票"碎片ListView
-//        OrderHistoryActivity.queryHistoryAll();
-
-        setNoTicketHistoryAdapter();
-
+        setNoTicketAdapter();
     }
 
-//    public void initHistoryNoTicketsListView() {
-//        OrderHistory order1 = new OrderHistory();
-//        order1.setDepart_station_name("火车东站");
-//        order1.setArrive_station_name("打铁关");
-//        order1.setTicket_status(0);
-//        order1.setTicket_count(1);
-//        order1.setTicket_price(2.00);
-//        historyNoTicketList.add(order1);
-//
-//        OrderHistory order2 = new OrderHistory();
-//        order2.setDepart_station_name("江陵路");
-//        order2.setArrive_station_name("西湖文化广场");
-//        order2.setTicket_status(1);
-//        order2.setTicket_count(2);
-//        order2.setTicket_price(8.00);
-//        historyNoTicketList.add(order2);
-//
-//        OrderHistory order3 = new OrderHistory();
-//        order3.setDepart_station_name("景芳");
-//        order3.setArrive_station_name("龙翔桥");
-//        order3.setTicket_status(2);
-//        order3.setTicket_count(3);
-//        order3.setTicket_price(12.00);
-//        historyNoTicketList.add(order3);
-//    }
-
-    // 定义"未取票"碎片的自定义适配器
-    public void setNoTicketHistoryAdapter() {
+    public void setNoTicketAdapter(){
         HistoryNoTicketFragmentAdapter adapter = new HistoryNoTicketFragmentAdapter(getActivity(), R.layout.activity_noticket_item, historyNoTicketList);
-        Log.d("adapter", String.valueOf(adapter));
         ListView listView = (ListView) view.findViewById(R.id.history_notickets_listview);
-        Log.d("listView", String.valueOf(listView));
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -89,6 +52,7 @@ public class HistoryNoTicketFragment extends Fragment {
                 mBundle.putInt("ticketCount", orderHistory.getTicket_count());
                 //exp: 2016-12-21 20:51:18
                 mBundle.putString("orderCreatedTime", orderHistory.getCreatedAt());
+//                mBundle.putString("orderCreatedTime", "2016-12-21 20:51:18");
                 mBundle.putString("orderID", orderHistory.getObjectId());
 
                 Intent intent = new Intent(getActivity(), PayDetailActivity.class);
@@ -140,7 +104,7 @@ public class HistoryNoTicketFragment extends Fragment {
             viewHolder.ticketStatus.setText(ticketStatus);
             viewHolder.ticketNum.setText(ticketNum);
             viewHolder.ticketPrice.setText(ticketPrice);
-            viewHolder.ticketCreatedTime.setText("2016-12-24 00:00:00");
+            viewHolder.ticketCreatedTime.setText(ticketCreatedTime);
 
             return view;
 
@@ -185,6 +149,5 @@ public class HistoryNoTicketFragment extends Fragment {
             return ticketPrice;
         }
     }
-
 
 }

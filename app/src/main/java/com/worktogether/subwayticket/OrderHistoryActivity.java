@@ -3,8 +3,8 @@ package com.worktogether.subwayticket;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -24,9 +24,11 @@ import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.QueryListener;
 
-
 public class OrderHistoryActivity extends AppCompatActivity implements View.OnClickListener {
 
+    // 当前登录用户
+    private BmobUser mCurUser;
+    private final static String HISTORY = "order_history";
     // "未取票"Tab
     private TextView historyNoTicket;
     // "全部"Tab
@@ -38,6 +40,7 @@ public class OrderHistoryActivity extends AppCompatActivity implements View.OnCl
     // "返回"按钮
     private LinearLayout historyTitleBack;
 
+    // 分别用于存储"全部"历史记录/"未取票"历史记录
     public static List<OrderHistory> historyAllTicketList = new ArrayList<OrderHistory>();
     public static List<OrderHistory> historyNoTicketList = new ArrayList<OrderHistory>();
 
@@ -46,30 +49,36 @@ public class OrderHistoryActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_history);
 
+        // 指向当前登录用户
+        mCurUser = BmobUser.getCurrentUser();
+
+        // 清空列表内的数据
+        historyAllTicketList.clear();
+        historyNoTicketList.clear();
+
+        // 查询当前登录用户的所有历史记录
+        queryHistoryAll();
+
+        findViews();
+
+        // 各个监听事件
+        initListener();
+    }
+
+    private void findViews() {
         // "未取票"Tab/"全部"Tab/"返回"按钮
         historyNoTicket = (TextView) findViewById(R.id.history_noticket);
         historyAll = (TextView) findViewById(R.id.history_all);
         historyTitleBack = (LinearLayout) findViewById(R.id.history_title_back);
+    }
 
-        // 默认显示"未取票"碎片
-        noTicketFragment = new HistoryNoTicketFragment();
-        FragmentManager noTicketFragmentManager = getFragmentManager();
-        FragmentTransaction noTicketTransaction = noTicketFragmentManager.beginTransaction();
-        noTicketTransaction.add(R.id.ticketFrameLayout, noTicketFragment);
-        noTicketTransaction.commit();
-
+    private void initListener() {
         // "未取票"Tab的事件监听
         historyNoTicket.setOnClickListener(this);
         // "全部"Tab的事件监听
         historyAll.setOnClickListener(this);
         // "返回"按钮
         historyTitleBack.setOnClickListener(this);
-
-        // 从Bmob中查询并初始化historyAllTicketList/historyNoTicketList
-        queryHistoryAll();
-
-        // 调用"全部"碎片的自定义适配器
-        HistoryNoTicketFragment.setNoTicketHistoryAdapter();
     }
 
     public void onClick(View view) {
@@ -100,18 +109,13 @@ public class OrderHistoryActivity extends AppCompatActivity implements View.OnCl
         fragmentTransaction.commit();
     }
 
-
     // 查询当前登录用户的所有历史记录
-    public void queryHistoryAll() {
+    private void queryHistoryAll() {
 
-        historyAllTicketList.clear();
-        historyNoTicketList.clear();
-
-        BmobQuery allQuery = new BmobQuery("order_history");
-
+        BmobQuery allQuery = new BmobQuery(HISTORY);
         // 查询user_phone为当前用户的手机号的数据
         // 当前用户的手机号
-        BmobUser mCurUser = BmobUser.getCurrentUser();
+
         String user_phone = mCurUser.getMobilePhoneNumber();
 
         allQuery.addWhereEqualTo("user_phone", user_phone);
@@ -123,38 +127,46 @@ public class OrderHistoryActivity extends AppCompatActivity implements View.OnCl
             public void done(JSONArray jsonArray, BmobException e) {
                 if (e == null) {
                     for (int i = 0; i < jsonArray.length(); i++) {
-                        Log.i("jsonArray11111111111", String.valueOf(jsonArray.length()));
                         try {
                             JSONObject obj = jsonArray.getJSONObject(i);
-                            Integer ticket_status = obj.getInt("ticket_status");
-                            Double ticket_price = obj.getDouble("ticket_price");
-                            Integer ticket_count = obj.getInt("ticket_count");
                             String depart_station_name = obj.getString("depart_station_name");
                             String arrive_station_name = obj.getString("arrive_station_name");
+                            int ticket_status = obj.getInt("ticket_status");
+                            double ticket_price = obj.getDouble("ticket_price");
+                            int ticket_count = obj.getInt("ticket_count");
 
-                            OrderHistory order = new OrderHistory();
-                            order.setDepart_station_name(depart_station_name);
-                            order.setArrive_station_name(arrive_station_name);
-                            order.setTicket_status(ticket_status);
-                            order.setTicket_price(ticket_price);
-                            order.setTicket_count(ticket_count);
+                            OrderHistory orderHistory = new OrderHistory();
+                            orderHistory.setDepart_station_name(depart_station_name);
+                            orderHistory.setArrive_station_name(arrive_station_name);
+                            orderHistory.setTicket_status(ticket_status);
+                            orderHistory.setTicket_price(ticket_price);
+                            orderHistory.setTicket_count(ticket_count);
 
-                            historyAllTicketList.add(order);
+                            historyAllTicketList.add(orderHistory);
 
                             if (ticket_status == 0) {
-                                historyNoTicketList.add(order);
+                                historyNoTicketList.add(orderHistory);
                             }
                         } catch (JSONException e1) {
                             e1.printStackTrace();
                         }
                     }
-
+                    // 默认显示"未取票"碎片
+                    showNoTicketFragment();
                 } else {
-                    Log.i("bmob", "失败：from all " + e.getMessage() + "," + e.getErrorCode());
+                    Log.i("bmob", "失败：from all " + e.toString());
                 }
             }
         });
+    }
 
+    private void showNoTicketFragment(){
+        // 默认显示"未取票"碎片
+        noTicketFragment = new HistoryNoTicketFragment();
+        FragmentManager noTicketFragmentManager = getFragmentManager();
+        FragmentTransaction noTicketTransaction = noTicketFragmentManager.beginTransaction();
+        noTicketTransaction.add(R.id.ticketFrameLayout, noTicketFragment);
+        noTicketTransaction.commit();
     }
 
 }

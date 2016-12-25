@@ -20,20 +20,14 @@ import java.util.List;
 import static com.worktogether.subwayticket.OrderHistoryActivity.historyAllTicketList;
 
 
-/**
- * Created by asus on 2016/12/21.
- */
-
 public class HistoryAllFragment extends Fragment {
 
-    //    private List<OrderHistory> historyAllTicketList = new ArrayList<OrderHistory>();
-//    public static List<OrderHistory> historyNoTicketList = new ArrayList<OrderHistory>();
-    public View view;
+    private View view;
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         //把布局加载进来了，通过返回的view就可以查到这个布局里面的id
         //这里一般不会处理问题，只是用来加载view
-        view = inflater.inflate(R.layout.activity_history_all, container, false);
+        view = inflater.inflate(R.layout.activity_history_all,container,false);
         return view;
     }
 
@@ -41,63 +35,31 @@ public class HistoryAllFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-//        // 初始化"所有"碎片ListView
-//        initHistoryAllTicketsListView();
-
-//        // 从Bmob中查询并初始化"所有"碎片ListView
-//        OrderHistoryActivity.queryHistoryAll();
-
-        setAllHistoryAdapter();
+        setAllAdapter();
     }
 
-//    public void initHistoryAllTicketsListView() {
-//        OrderHistory order4 = new OrderHistory();
-//        order4.setDepart_station_name("火车西站");
-//        order4.setArrive_station_name("打铁关");
-//        order4.setTicket_status(0);
-//        order4.setTicket_count(1);
-//        order4.setTicket_price(2.00);
-//        historyAllTicketList.add(order4);
-//
-//        OrderHistory order5 = new OrderHistory();
-//        order5.setDepart_station_name("江陵路");
-//        order5.setArrive_station_name("武林广场");
-//        order5.setTicket_status(1);
-//        order5.setTicket_count(2);
-//        order5.setTicket_price(8.00);
-//        historyAllTicketList.add(order5);
-//
-//        OrderHistory order6 = new OrderHistory();
-//        order6.setDepart_station_name("金沙湖");
-//        order6.setArrive_station_name("龙翔桥");
-//        order6.setTicket_status(2);
-//        order6.setTicket_count(3);
-//        order6.setTicket_price(12.00);
-//        historyAllTicketList.add(order6);
-//    }
-
-
-    // 定义"全部"碎片的自定义适配器
-    public void setAllHistoryAdapter() {
-        HistoryAllFragmentAdapter adapter = new HistoryAllFragmentAdapter(getActivity(), R.layout.activity_all_item, historyAllTicketList);
-        Log.d("adapter", String.valueOf(adapter));
+    public void setAllAdapter(){
+        HistoryAllFragmentAdapter adapter = new HistoryAllFragmentAdapter(getActivity(),R.layout.activity_all_item,historyAllTicketList);
         ListView listView = (ListView) view.findViewById(R.id.history_all_listview);
-        Log.d("listView", String.valueOf(listView));
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 OrderHistory orderHistory = historyAllTicketList.get(position);
-                Bundle mBundle = new Bundle();
-                mBundle.putString("departStation", orderHistory.getDepart_station_name());
-                mBundle.putString("arriveStation", orderHistory.getArrive_station_name());
-                mBundle.putDouble("totalMoney", orderHistory.getTicket_price() * orderHistory.getTicket_count());
-                mBundle.putInt("ticketCount", orderHistory.getTicket_count());
+                Bundle mBundle=new Bundle();
+                mBundle.putString("departStation",orderHistory.getDepart_station_name());
+                mBundle.putString("arriveStation",orderHistory.getArrive_station_name());
+                mBundle.putDouble("totalMoney",orderHistory.getTicket_price()*orderHistory.getTicket_count());
+                mBundle.putInt("ticketCount",orderHistory.getTicket_count());
                 //exp: 2016-12-21 20:51:18
-                mBundle.putString("orderCreatedTime", orderHistory.getCreatedAt());
-                mBundle.putString("orderID", orderHistory.getObjectId());
+                //mBundle.putString("orderCreatedTime",orderHistory.getCreatedAt());
+                String str=historyAllTicketList.get(position).getCreatedAt();
+                Log.d("orderCreatedTime","orderCreatedTime: "+str);
 
-                Intent intent = new Intent(getActivity(), PayDetailActivity.class);
+//                mBundle.putString("orderCreatedTime","2016-12-21 20:51:18");
+                mBundle.putString("orderID",orderHistory.getObjectId());
+
+                Intent intent=new Intent(getActivity(),PayDetailActivity.class);
                 intent.putExtras(mBundle);
                 startActivity(intent);
             }
@@ -139,7 +101,7 @@ public class HistoryAllFragment extends Fragment {
             // 地铁票张数
             String ticketNum = changeTicketNum(orderHistory.getTicket_count());
             // 订单总金额
-            String ticketPrice = changeTicketPrice(orderHistory.getTicket_price(), orderHistory.getTicket_count());
+            String ticketPrice = changeTicketPrice(orderHistory.getTicket_price(),orderHistory.getTicket_count());
             // 订单生成时间
             String ticketCreatedTime = orderHistory.getCreatedAt();
 
@@ -147,13 +109,13 @@ public class HistoryAllFragment extends Fragment {
             viewHolder.ticketStatus.setText(ticketStatus);
             viewHolder.ticketNum.setText(ticketNum);
             viewHolder.ticketPrice.setText(ticketPrice);
-            viewHolder.ticketCreatedTime.setText("2016-12-24 00:00:00");
+            viewHolder.ticketCreatedTime.setText(ticketCreatedTime);
 
             return view;
 
         }
 
-        class ViewHolder {
+        public class ViewHolder {
             TextView departToArrive;
             TextView ticketStatus;
             TextView ticketNum;
@@ -192,5 +154,4 @@ public class HistoryAllFragment extends Fragment {
             return ticketPrice;
         }
     }
-
 }
