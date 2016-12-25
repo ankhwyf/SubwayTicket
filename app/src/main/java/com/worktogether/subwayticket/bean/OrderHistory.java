@@ -21,9 +21,9 @@ public class OrderHistory extends BmobObject {
     //到达站名
     private String arrive_station_name;
     //订单ID
-    private String objectId;
+    private String id;
     //创建时间
-    private String createdAt;
+    private String createAt;
 
 
     //对应数据库中的表名
@@ -31,24 +31,21 @@ public class OrderHistory extends BmobObject {
         this.setTableName("order_history");
     }
 
-    @Override
-    public String getObjectId() {
-        return objectId;
+
+    public String getId() {
+        return id;
     }
 
-    @Override
-    public void setObjectId(String objectId) {
-        this.objectId = objectId;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    @Override
-    public String getCreatedAt() {
-        return createdAt;
+    public String getCreateAt() {
+        return createAt;
     }
 
-    @Override
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
+    public void setCreateAt(String createAt) {
+        this.createAt = createAt;
     }
 
     public String getUser_phone() {

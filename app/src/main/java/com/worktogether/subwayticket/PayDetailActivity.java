@@ -59,7 +59,7 @@ public class PayDetailActivity extends AppCompatActivity implements View.OnClick
         String orderID = mBundle.getString("orderID");
 
         // 出发站-到达站
-        String departToArriveStation = departStation + "-" + arriveStation;
+        String departToArriveStation = departStation + " -- " + arriveStation;
         // 地铁票截止时间
         String dueDate = "";
         try {

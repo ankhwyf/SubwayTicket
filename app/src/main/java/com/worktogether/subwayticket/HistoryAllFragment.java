@@ -3,8 +3,8 @@ package com.worktogether.subwayticket;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,10 +24,10 @@ public class HistoryAllFragment extends Fragment {
 
     private View view;
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //把布局加载进来了，通过返回的view就可以查到这个布局里面的id
         //这里一般不会处理问题，只是用来加载view
-        view = inflater.inflate(R.layout.activity_history_all,container,false);
+        view = inflater.inflate(R.layout.activity_history_all, container, false);
         return view;
     }
 
@@ -38,29 +38,24 @@ public class HistoryAllFragment extends Fragment {
         setAllAdapter();
     }
 
-    public void setAllAdapter(){
-        HistoryAllFragmentAdapter adapter = new HistoryAllFragmentAdapter(getActivity(),R.layout.activity_all_item,historyAllTicketList);
+    public void setAllAdapter() {
+        HistoryAllFragmentAdapter adapter = new HistoryAllFragmentAdapter(getActivity(), R.layout.activity_all_item, historyAllTicketList);
         ListView listView = (ListView) view.findViewById(R.id.history_all_listview);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 OrderHistory orderHistory = historyAllTicketList.get(position);
-                Bundle mBundle=new Bundle();
-                mBundle.putString("departStation",orderHistory.getDepart_station_name());
-                mBundle.putString("arriveStation",orderHistory.getArrive_station_name());
-                mBundle.putDouble("totalMoney",orderHistory.getTicket_price()*orderHistory.getTicket_count());
-                mBundle.putInt("ticketCount",orderHistory.getTicket_count());
+                Bundle mBundle = new Bundle();
+                mBundle.putString("departStation", orderHistory.getDepart_station_name());
+                mBundle.putString("arriveStation", orderHistory.getArrive_station_name());
+                mBundle.putDouble("totalMoney", orderHistory.getTicket_price() * orderHistory.getTicket_count());
+                mBundle.putInt("ticketCount", orderHistory.getTicket_count());
                 //exp: 2016-12-21 20:51:18
+                mBundle.putString("orderCreatedTime", orderHistory.getCreateAt());
+                mBundle.putString("orderID", orderHistory.getId());
 
-                mBundle.putString("orderCreatedTime",orderHistory.getCreatedAt());
-                Log.d("bmob","getCreatedAt: "+position+"  :"+historyAllTicketList.get(position).getCreatedAt());
-
-//                mBundle.putString("orderCreatedTime","2016-12-21 20:51:18");
-                mBundle.putString("orderID",orderHistory.getObjectId());
-                Log.d("bmob","getObjectId: "+position+"  :"+historyAllTicketList.get(position).getObjectId());
-
-                Intent intent=new Intent(getActivity(),PayDetailActivity.class);
+                Intent intent = new Intent(getActivity(), PayDetailActivity.class);
                 intent.putExtras(mBundle);
                 startActivity(intent);
             }
@@ -96,21 +91,26 @@ public class HistoryAllFragment extends Fragment {
                 viewHolder = (ViewHolder) view.getTag();
             }
             // 出发站-到达站
-            String departToArrive = orderHistory.getDepart_station_name() + "-" + orderHistory.getArrive_station_name();
+            String departToArrive = orderHistory.getDepart_station_name() + " -- " + orderHistory.getArrive_station_name();
             // 地铁票状态
             String ticketStatus = changeTicketStatus(orderHistory.getTicket_status());
             // 地铁票张数
             String ticketNum = changeTicketNum(orderHistory.getTicket_count());
             // 订单总金额
-            String ticketPrice = changeTicketPrice(orderHistory.getTicket_price(),orderHistory.getTicket_count());
+            String ticketPrice = changeTicketPrice(orderHistory.getTicket_price(), orderHistory.getTicket_count());
             // 订单生成时间
-            String ticketCreatedTime = orderHistory.getCreatedAt();
+            String ticketCreatedTime = orderHistory.getCreateAt();
+            String[] date = ticketCreatedTime.split(" ");
+
+            // 若地铁票的状态为"未取票"，则设置字体颜色为蓝色
+            if (orderHistory.getTicket_status() == 0)
+                viewHolder.ticketStatus.setTextColor(android.graphics.Color.BLUE);
 
             viewHolder.departToArrive.setText(departToArrive);
             viewHolder.ticketStatus.setText(ticketStatus);
             viewHolder.ticketNum.setText(ticketNum);
             viewHolder.ticketPrice.setText(ticketPrice);
-            viewHolder.ticketCreatedTime.setText(ticketCreatedTime);
+            viewHolder.ticketCreatedTime.setText(date[0]);
 
             return view;
 
@@ -157,10 +157,9 @@ public class HistoryAllFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
     }
-
 
 
 }

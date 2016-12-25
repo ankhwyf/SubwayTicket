@@ -25,17 +25,26 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity"></activity>
-        <activity android:name=".RegisterActivity"></activity>
-        <activity android:name=".OrderHistoryActivity"></activity>
-        <activity android:name=".PayDetailActivity"></activity>
+        <activity android:name=".LoginActivity"
+            android:launchMode="singleTask"
+            ></activity>
+        <activity android:name=".RegisterActivity"
+            android:launchMode="singleTask"
+            ></activity>
+        <activity android:name=".OrderHistoryActivity"
+            android:launchMode="singleTask"
+            >
+        </activity>
+        <activity android:name=".PayDetailActivity"
+            android:launchMode="singleTask"></activity>
     </application>
 
 </manifest>

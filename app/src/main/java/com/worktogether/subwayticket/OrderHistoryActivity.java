@@ -144,8 +144,8 @@ public class OrderHistoryActivity extends AppCompatActivity implements View.OnCl
                             orderHistory.setTicket_status(ticket_status);
                             orderHistory.setTicket_price(ticket_price);
                             orderHistory.setTicket_count(ticket_count);
-                            orderHistory.setObjectId(objectId);
-//                            orderHistory.setCreatedAt(createdAt);
+                            orderHistory.setId(objectId);
+                            orderHistory.setCreateAt(createdAt);
 
                             historyAllTicketList.add(orderHistory);
 

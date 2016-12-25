@@ -37,7 +37,8 @@ public class HistoryNoTicketFragment extends Fragment {
         setNoTicketAdapter();
     }
 
-    public void setNoTicketAdapter(){
+
+    public void setNoTicketAdapter() {
         HistoryNoTicketFragmentAdapter adapter = new HistoryNoTicketFragmentAdapter(getActivity(), R.layout.activity_noticket_item, historyNoTicketList);
         ListView listView = (ListView) view.findViewById(R.id.history_notickets_listview);
         listView.setAdapter(adapter);
@@ -51,9 +52,8 @@ public class HistoryNoTicketFragment extends Fragment {
                 mBundle.putDouble("totalMoney", orderHistory.getTicket_price() * orderHistory.getTicket_count());
                 mBundle.putInt("ticketCount", orderHistory.getTicket_count());
                 //exp: 2016-12-21 20:51:18
-                mBundle.putString("orderCreatedTime", orderHistory.getCreatedAt());
-//                mBundle.putString("orderCreatedTime", "2016-12-21 20:51:18");
-                mBundle.putString("orderID", orderHistory.getObjectId());
+                mBundle.putString("orderCreatedTime", orderHistory.getCreateAt());
+                mBundle.putString("orderID", orderHistory.getId());
 
                 Intent intent = new Intent(getActivity(), PayDetailActivity.class);
                 intent.putExtras(mBundle);
@@ -61,6 +61,8 @@ public class HistoryNoTicketFragment extends Fragment {
             }
         });
     }
+
+
 
     // "未取票"碎片的自定义适配器类
     public class HistoryNoTicketFragmentAdapter extends ArrayAdapter<OrderHistory> {
@@ -90,7 +92,7 @@ public class HistoryNoTicketFragment extends Fragment {
                 viewHolder = (ViewHolder) view.getTag();
             }
             // 出发站-到达站
-            String departToArrive = orderHistory.getDepart_station_name() + "-" + orderHistory.getArrive_station_name();
+            String departToArrive = orderHistory.getDepart_station_name() + " -- " + orderHistory.getArrive_station_name();
             // 地铁票状态
             String ticketStatus = changeTicketStatus(orderHistory.getTicket_status());
             // 地铁票张数
@@ -98,13 +100,18 @@ public class HistoryNoTicketFragment extends Fragment {
             // 订单总金额
             String ticketPrice = changeTicketPrice(orderHistory.getTicket_price(), orderHistory.getTicket_count());
             // 订单生成时间
-            String ticketCreatedTime = orderHistory.getCreatedAt();
+            String ticketCreatedTime = orderHistory.getCreateAt();
+            String[] date = ticketCreatedTime.split(" ");
+
+            // 若地铁票的状态为"未取票"，则设置字体颜色为蓝色
+            if (orderHistory.getTicket_status() == 0)
+                viewHolder.ticketStatus.setTextColor(android.graphics.Color.BLUE);
 
             viewHolder.departToArrive.setText(departToArrive);
             viewHolder.ticketStatus.setText(ticketStatus);
             viewHolder.ticketNum.setText(ticketNum);
             viewHolder.ticketPrice.setText(ticketPrice);
-            viewHolder.ticketCreatedTime.setText(ticketCreatedTime);
+            viewHolder.ticketCreatedTime.setText(date[0]);
 
             return view;
 
@@ -151,7 +158,7 @@ public class HistoryNoTicketFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
     }
 

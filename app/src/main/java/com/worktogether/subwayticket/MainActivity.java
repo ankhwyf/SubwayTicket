@@ -37,8 +37,11 @@ import static com.worktogether.subwayticket.MyApplication.mStationListOne;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    //当前用户
     private BmobUser mCurUser;
+    //票的张数
     private int mCount = 1;
+    //票的单价
     public double money = 0.0;
 
     // 选择的类型
@@ -91,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //获取当前用户
         mCurUser = BmobUser.getCurrentUser();
         // 关联控件
         findViews();
@@ -176,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mBtnConfirmPay.setOnClickListener(this);
         mIvCancelPay.setOnClickListener(this);
 
-
+        //显示相关确认信息
         mTvConfirmCount.setText("杭州地铁单程票" + mCount + " 张");
         mTvConfirmMoneyAmount.setText(money * mCount + "元");
         mTvConfirmPhone.setText(mUserPhone);
@@ -368,7 +372,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             mBundle.putInt("ticketCount", mCount);
                             //exp: 2016-12-21 20:51:18
                             mBundle.putString("orderCreatedTime", mCurOrder.getCreatedAt());
-
+                            mBundle.putString("orderID",mCurOrder.getObjectId());
                             Intent intent = new Intent();
                             intent.setClass(MainActivity.this, PayDetailActivity.class);
                             intent.putExtras(mBundle);
@@ -454,12 +458,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if (temp <= 32) price = 7.0;
         else if (temp <= 40) price = 8.0;
         return price;
-    }
-
-
-    @Override
-    protected void onDestroy(){
-        super.onDestroy();
     }
 
 }

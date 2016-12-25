@@ -4,7 +4,7 @@
     android:id="@+id/activity_pay_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F0F0F2"
+    android:background="#ECECEC"
     tools:context="com.worktogether.subwayticket.PayDetailActivity">
 
     <!--标题-->
@@ -22,6 +22,7 @@
             <ImageView
                 android:layout_width="18dp"
                 android:layout_height="18dp"
+                android:layout_marginTop="3dp"
                 android:layout_marginLeft="10dp"
                 android:src="@drawable/exit"/>
             <TextView
@@ -69,19 +70,14 @@
             android:layout_width="match_parent"
             android:layout_height="65dp">
             <!--地铁图标-->
-            <ImageView
-                android:layout_width="36dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/subway" />
             <!--兑换券/起点-终点-->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="60dp"
+                android:layout_marginLeft="70dp"
                 android:layout_marginTop="15dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:id="@+id/linearLayout">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -105,12 +101,24 @@
                 android:background="#0000"
                 android:text="查看线路"
                 android:textColor="#fff" />
+
+            <ImageView
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/detail_subway"
+                android:layout_alignTop="@+id/linearLayout"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="17dp"
+                android:id="@+id/imageView" />
         </RelativeLayout>
 
         <!--第二行（票面金额/张数/类型）-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
+            android:layout_marginTop="3dp"
             android:orientation="horizontal">
             <!--票面金额-->
             <LinearLayout
@@ -134,6 +142,11 @@
                     android:gravity="center"
                     android:textColor="#fff"/>
             </LinearLayout>
+            <TextView
+                android:layout_width="1dp"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:background="#eee"/>
             <!--张数-->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -156,6 +169,11 @@
                     android:gravity="center"
                     android:textColor="#fff"/>
             </LinearLayout>
+            <TextView
+                android:layout_width="1dp"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:background="#eee"/>
             <!--类型-->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -217,21 +235,22 @@
         <TextView
             android:id="@+id/QRCodeStr"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_horizontal"
             android:textSize="16dp"
             android:textStyle="bold"/>
         <!--第二行（二维码对应图片）-->
         <ImageView
             android:id="@+id/ticket_QRCode"
-            android:layout_width="200dp"
-            android:layout_height="150dp"
+            android:layout_width="280dp"
+            android:layout_height="200dp"
             android:layout_gravity="center_horizontal"/>
         <!--第三行（二维码用法提示）-->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="center_horizontal"
             android:textSize="13dp"
             android:text="请使用此二维码在机器上兑换地铁票"/>
     </LinearLayout>
@@ -252,6 +271,7 @@
             android:layout_gravity="center_vertical|left"
             android:background="#F0F0F2"
             android:textStyle="bold"
+            android:textSize="16sp"
             android:text="使用引导"/>
 
         <LinearLayout
