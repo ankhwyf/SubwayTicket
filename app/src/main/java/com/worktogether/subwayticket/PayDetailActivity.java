@@ -107,7 +107,8 @@ public class PayDetailActivity extends AppCompatActivity implements View.OnClick
 //                //启动主界面(购票界面)的活动
 //                startActivity(new Intent(PayDetailActivity.this, MainActivity.class));
                 //启动历史记录界面的活动
-                startActivity(new Intent(PayDetailActivity.this, OrderHistoryActivity.class));
+//                startActivity(new Intent(PayDetailActivity.this, OrderHistoryActivity.class));
+                finish();
                 break;
             default:
                 break;

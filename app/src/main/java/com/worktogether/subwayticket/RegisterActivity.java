@@ -194,7 +194,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 break;
 
             case R.id.layout_login:
-                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+//                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                finish();
                 break;
         }
     }

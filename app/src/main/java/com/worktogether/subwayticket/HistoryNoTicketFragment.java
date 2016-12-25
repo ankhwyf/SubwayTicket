@@ -3,6 +3,7 @@ package com.worktogether.subwayticket;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -105,7 +106,7 @@ public class HistoryNoTicketFragment extends Fragment {
 
             // 若地铁票的状态为"未取票"，则设置字体颜色为蓝色
             if (orderHistory.getTicket_status() == 0)
-                viewHolder.ticketStatus.setTextColor(android.graphics.Color.BLUE);
+                viewHolder.ticketStatus.setTextColor(viewHolder.ticketStatus.getResources().getColor(R.color.colorLightBlue));
 
             viewHolder.departToArrive.setText(departToArrive);
             viewHolder.ticketStatus.setText(ticketStatus);

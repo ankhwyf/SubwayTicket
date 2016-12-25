@@ -103,8 +103,9 @@ public class HistoryAllFragment extends Fragment {
             String[] date = ticketCreatedTime.split(" ");
 
             // 若地铁票的状态为"未取票"，则设置字体颜色为蓝色
+            // 若地铁票的状态为"未取票"，则设置字体颜色为蓝色
             if (orderHistory.getTicket_status() == 0)
-                viewHolder.ticketStatus.setTextColor(android.graphics.Color.BLUE);
+                viewHolder.ticketStatus.setTextColor(viewHolder.ticketStatus.getResources().getColor(R.color.colorLightBlue));
 
             viewHolder.departToArrive.setText(departToArrive);
             viewHolder.ticketStatus.setText(ticketStatus);
