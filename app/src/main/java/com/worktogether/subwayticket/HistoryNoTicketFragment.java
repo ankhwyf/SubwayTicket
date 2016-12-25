@@ -12,11 +12,18 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.worktogether.subwayticket.bean.OrderHistory;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
+
+import static cn.bmob.v3.Bmob.getApplicationContext;
 
 
 public class HistoryNoTicketFragment extends Fragment {
@@ -37,8 +44,11 @@ public class HistoryNoTicketFragment extends Fragment {
 
         historyNoTicketList.clear();
 
-        // 初始化"未取票"碎片ListView
-        initHistoryNoTicketsListView();
+//        // 初始化"未取票"碎片ListView
+//        initHistoryNoTicketsListView();
+
+        // 从Bmob中查询并初始化"未取票"碎片ListView
+        queryHistoryNoTicket();
 
         HistoryNoTicketFragmentAdapter adapter = new HistoryNoTicketFragmentAdapter(getActivity(), R.layout.activity_noticket_item, historyNoTicketList);
         Log.d("adapter", String.valueOf(adapter));
@@ -56,7 +66,7 @@ public class HistoryNoTicketFragment extends Fragment {
                 mBundle.putInt("ticketCount", orderHistory.getTicket_count());
                 //exp: 2016-12-21 20:51:18
 //                mBundle.putString("orderCreatedTime", orderHistory.getCreatedAt());
-                mBundle.putString("orderCreatedTime","2016-12-21 20:51:18");
+                mBundle.putString("orderCreatedTime", "2016-12-21 20:51:18");
                 mBundle.putString("orderID", orderHistory.getObjectId());
 
                 Intent intent = new Intent(getActivity(), PayDetailActivity.class);
@@ -94,6 +104,38 @@ public class HistoryNoTicketFragment extends Fragment {
         historyNoTicketList.add(order3);
     }
 
+    public void queryHistoryNoTicket() {
+        // 每一个查询条件都需要New一个BmobQuery对象
+        // and条件1 当前用户的手机号
+        BmobQuery<OrderHistory> userPhoneQuery = new BmobQuery<OrderHistory>();
+        String user_phone = "";
+        userPhoneQuery.addWhereLessThanOrEqualTo("user_phone", user_phone);
+        // and条件2 地铁票状态为"未取票"即ticket_status=0
+        BmobQuery<OrderHistory> ticketStatusQuery = new BmobQuery<OrderHistory>();
+        ticketStatusQuery.addWhereLessThanOrEqualTo("ticket_status", 0);
+        // 最后组装完整的and条件
+        List<BmobQuery<OrderHistory>> ansQueries = new ArrayList<BmobQuery<OrderHistory>>();
+        ansQueries.add(userPhoneQuery);
+        ansQueries.add(ticketStatusQuery);
+        // 查询符合整个and条件的历史记录
+        BmobQuery<OrderHistory> query = new BmobQuery<OrderHistory>();
+        query.and(ansQueries);
+        query.findObjects(new FindListener<OrderHistory>() {
+            @Override
+            public void done(List<OrderHistory> list, BmobException e) {
+                if (e == null) {
+                    Toast.makeText(getApplicationContext(), "查询成功：共" + list.size() + "条数据", Toast.LENGTH_SHORT).show();
+                    for (OrderHistory noTicketHistory : list) {
+                        historyNoTicketList.add(noTicketHistory);
+                    }
+                } else {
+                    Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
+                }
+            }
+        });
+
+    }
+
     public class HistoryNoTicketFragmentAdapter extends ArrayAdapter<OrderHistory> {
 
         private int resourceId;
@@ -127,7 +169,7 @@ public class HistoryNoTicketFragment extends Fragment {
             // 地铁票张数
             String ticketNum = changeTicketNum(orderHistory.getTicket_count());
             // 订单总金额
-            String ticketPrice = changeTicketPrice(orderHistory.getTicket_price(),orderHistory.getTicket_count());
+            String ticketPrice = changeTicketPrice(orderHistory.getTicket_price(), orderHistory.getTicket_count());
             // 订单生成时间
             String ticketCreatedTime = orderHistory.getCreatedAt();
 

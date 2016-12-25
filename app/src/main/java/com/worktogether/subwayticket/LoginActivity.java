@@ -58,11 +58,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         // add action listen event
         addListener();
 
-        Intent intent=getIntent();
-        if(intent!=null){
-            Bundle bundle=intent.getExtras();
-            if(bundle!=null){
-                str_tel=bundle.getString("phone");
+        Intent intent = getIntent();
+        if (intent != null) {
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                str_tel = bundle.getString("phone");
                 et_tel.setText(str_tel);
             }
         }
@@ -134,8 +134,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 public void done(List<BmobUser> list, BmobException e) {
                     if (e == null) {
                         if (list.size() > 0) {
-                            is_account_valid=true;
-                           testValid();
+                            is_account_valid = true;
+                            testValid();
                         } else {
                             AlertDialog.Builder publicDialog = new AlertDialog.Builder(LoginActivity.this);
                             publicDialog.setTitle("提示");
@@ -150,7 +150,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     //启动注册界面的活动
-                                    startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
+                                    startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
                                 }
                             });
                             publicDialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -183,7 +183,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 //http://blog.csdn.net/wq___1994/article/details/51916667
                 if (is_pwd_visiable) {
                     img_eye.setImageResource(R.drawable.eye);
-                    et_pwd.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD|InputType.TYPE_CLASS_TEXT);
+                    et_pwd.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT);
                 } else {
                     //visible
                     img_eye.setImageResource(R.drawable.noeye);

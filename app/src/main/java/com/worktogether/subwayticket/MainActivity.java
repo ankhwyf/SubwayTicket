@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mCurUser=BmobUser.getCurrentUser();
+        mCurUser = BmobUser.getCurrentUser();
         // 关联控件
         findViews();
         //监听事件
@@ -246,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     AlertDialog.Builder publicDialog = new AlertDialog.Builder(MainActivity.this);
                     publicDialog.setTitle("提示");
                     publicDialog.setIcon(R.drawable.reminder);
-                    publicDialog.setMessage("确定 "+mCurUser.getMobilePhoneNumber()+" 退出登录？");
+                    publicDialog.setMessage("确定"+mCurUser.getMobilePhoneNumber()+"退出登录？");
                     publicDialog.setCancelable(false);
                     publicDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         @Override
@@ -255,11 +255,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             BmobUser.logOut();
                             //启动登录界面的活动
                             startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                        }
-                    });
-                    publicDialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
                         }
                     });
                     publicDialog.show();
@@ -273,8 +268,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                //若为非登录状态，则启动登录界面的活动
                 if (mCurUser==null) {
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                }
-                else {
+                } else {
                     //否则跳至历史订单记录界面
                     startActivity(new Intent(MainActivity.this, OrderHistoryActivity.class));
                 }
