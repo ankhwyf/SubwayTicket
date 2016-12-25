@@ -80,11 +80,8 @@ public class HistoryAllFragment extends Fragment {
                 mBundle.putDouble("totalMoney",orderHistory.getTicket_price()*orderHistory.getTicket_count());
                 mBundle.putInt("ticketCount",orderHistory.getTicket_count());
                 //exp: 2016-12-21 20:51:18
-                mBundle.putString("orderCreatedTime",orderHistory.getCreatedAt());
-                Log.d("bmob","getCreatedAt: "+position+"  :"+historyAllTicketList.get(position).getCreatedAt());
-//                mBundle.putString("orderCreatedTime","2016-12-21 20:51:18");
-                mBundle.putString("orderID",orderHistory.getObjectId());
-                Log.d("bmob","getObjectId: "+position+"  :"+historyAllTicketList.get(position).getObjectId());
+                mBundle.putString("orderCreatedTime",orderHistory.getCreateAt());
+                mBundle.putString("orderID",orderHistory.getId());
 
                 Intent intent=new Intent(getActivity(),PayDetailActivity.class);
                 intent.putExtras(mBundle);

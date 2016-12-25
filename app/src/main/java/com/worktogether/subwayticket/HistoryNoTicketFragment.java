@@ -70,9 +70,8 @@ public void setAdapterUntaken(){
             mBundle.putDouble("totalMoney", orderHistory.getTicket_price() * orderHistory.getTicket_count());
             mBundle.putInt("ticketCount", orderHistory.getTicket_count());
             //exp: 2016-12-21 20:51:18
-//                mBundle.putString("orderCreatedTime", orderHistory.getCreatedAt());
-            mBundle.putString("orderCreatedTime", "2016-12-21 20:51:18");
-            mBundle.putString("orderID", orderHistory.getObjectId());
+            mBundle.putString("orderCreatedTime", orderHistory.getCreateAt());
+            mBundle.putString("orderID", orderHistory.getId());
 
             Intent intent = new Intent(getActivity(), PayDetailActivity.class);
             intent.putExtras(mBundle);

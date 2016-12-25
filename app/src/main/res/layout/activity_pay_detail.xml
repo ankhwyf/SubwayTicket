@@ -213,7 +213,7 @@
         android:id="@+id/layout_qr_code"
         android:layout_below="@id/layout_ticket_info"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="240dp"
         android:background="#FFF"
         android:orientation="vertical">
 
@@ -230,7 +230,7 @@
         <ImageView
             android:id="@+id/ticket_QRCode"
             android:layout_width="200dp"
-            android:layout_height="150dp"
+            android:layout_height="160dp"
             android:layout_gravity="center_horizontal"/>
         <!--第三行（二维码用法提示）-->
         <TextView
@@ -257,6 +257,7 @@
             android:layout_gravity="center_vertical|left"
             android:background="#F0F0F2"
             android:textStyle="bold"
+            android:textSize="16sp"
             android:text="使用引导"/>
 
         <LinearLayout
