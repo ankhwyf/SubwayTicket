@@ -1,9 +1,7 @@
 package com.worktogether.subwayticket;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -20,9 +18,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.worktogether.subwayticket.util.Constants;
-import com.worktogether.subwayticket.util.SharedPreferencesUtils;
 
 import java.util.List;
 
@@ -62,6 +57,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         // add action listen event
         addListener();
+
+        Intent intent=getIntent();
+        if(intent!=null){
+            Bundle bundle=intent.getExtras();
+            if(bundle!=null){
+                str_tel=bundle.getString("phone");
+                et_tel.setText(str_tel);
+            }
+        }
     }
 
     private void findviews() {
@@ -105,8 +109,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             toast("用户名或密码错误");
                             Log.d("bmob", "查询失败" + e.getMessage() + ", " + e.getErrorCode());
                         } else if (user != null) {
-                            //将当前状态存储至SharedPreferences，登录状态为登录（true）
-                            SharedPreferencesUtils.save(LoginActivity.this, Constants.KEY_LOGIN_STATUS, true);
                             toast("登录成功！");
                             //启动购票界面的活动
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
@@ -148,7 +150,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     //启动注册界面的活动
-                                    startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+                                    startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
                                 }
                             });
                             publicDialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {

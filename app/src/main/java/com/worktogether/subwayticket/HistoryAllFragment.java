@@ -15,8 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.worktogether.subwayticket.bean.OrderHistory;
-import com.worktogether.subwayticket.util.Constants;
-import com.worktogether.subwayticket.util.SharedPreferencesUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +82,8 @@ public class HistoryAllFragment extends Fragment {
         BmobQuery<OrderHistory> allQuery = new BmobQuery<OrderHistory>();
         // 查询user_phone为当前用户的手机号的数据
         // 当前用户的手机号
-        String user_phone =  (String) SharedPreferencesUtils.get(getActivity(), Constants.KEY_USER_PHONE, Constants.TYPE_STRING);
+
+        String user_phone = "";
         allQuery.addWhereEqualTo("user_phone",user_phone);
         // 执行查询方法
         allQuery.findObjects(new FindListener<OrderHistory>() {

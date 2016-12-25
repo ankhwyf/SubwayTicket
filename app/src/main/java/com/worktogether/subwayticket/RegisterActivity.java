@@ -99,8 +99,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                 @Override
                                 public void done(BmobUser s, BmobException e) {
                                     if (e == null) {
+                                        Bundle mBundle = new Bundle();
+                                        mBundle.putString("phone", str_tel);
+                                        //启动登录界面的活动
+                                        Intent intent = new Intent();
+                                        intent.setClass(RegisterActivity.this, LoginActivity.class);
+                                        intent.putExtras(mBundle);
+                                        startActivity(intent);
                                         toast("注册成功！^_^");
-                                        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                                     } else {
                                         Log.d("bmob", "失败" + e.getMessage() + "," + e.getErrorCode());
                                     }

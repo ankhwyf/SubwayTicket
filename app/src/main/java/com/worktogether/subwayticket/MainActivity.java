@@ -1,7 +1,5 @@
 package com.worktogether.subwayticket;
 
-import android.app.Activity;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -24,23 +22,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.worktogether.subwayticket.bean.OrderHistory;
-import com.worktogether.subwayticket.bean.SubwayLine;
-import com.worktogether.subwayticket.util.Constants;
-import com.worktogether.subwayticket.util.SharedPreferencesUtils;
 import com.wx.wheelview.adapter.ArrayWheelAdapter;
 import com.wx.wheelview.widget.WheelView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
 
 import static com.worktogether.subwayticket.MyApplication.getIndexOfStation;
@@ -52,8 +38,6 @@ import static com.worktogether.subwayticket.MyApplication.mStationListOne;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private BmobUser mCurUser;
-    public static Boolean isLogin = false;
-    private String mUserPhone;
     private int mCount = 1;
     public double money = 0.0;
 
@@ -86,12 +70,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button mBtnConfirm;
     //popupWindow 弹出框取消按钮
     private Button mBtnCancel;
-    //确认 付款详情
-    private Button mBtnConfirmPay;
-    private TextView mTvConfirmCount;
-    private TextView mTvConfirmMoneyAmount;
-    private TextView mTvConfirmPhone;
-    private ImageView mIvCancelPay;
     //监听起点终点是否已选择
     private MyTextWatcher mTextWatcher = new MyTextWatcher();
     //popupWindow 弹出框
@@ -182,15 +160,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mPopupConfirmPayWindow.setTouchable(true);
         // 点击空白区域，窗口消失
         mPopupConfirmPayWindow.setOutsideTouchable(true);
+
+        //findById
         Button mBtnConfirmPay = (Button) popupView.findViewById(R.id.confirm_pay_btn);
-        final TextView mTvConfirmCount = (TextView) popupView.findViewById(R.id.confirm_ticket_count);
-        final TextView mTvConfirmMoneyAmount = (TextView) popupView.findViewById(R.id.confirm_money_amount);
+        TextView mTvConfirmCount = (TextView) popupView.findViewById(R.id.confirm_ticket_count);
+        TextView mTvConfirmMoneyAmount = (TextView) popupView.findViewById(R.id.confirm_money_amount);
         TextView mTvConfirmPhone = (TextView) popupView.findViewById(R.id.confirm_phone_number);
-        final ImageView mIvCancelPay = (ImageView) popupView.findViewById(R.id.cancel_pay);
+        ImageView mIvCancelPay = (ImageView) popupView.findViewById(R.id.cancel_pay);
+
+        //隐藏手机号中间4位
+       String mUserPhone=mCurUser.getMobilePhoneNumber();
+        mUserPhone=mUserPhone.substring(0,3)+"****"+mUserPhone.substring(7,11);
+
         mBtnConfirmPay.setOnClickListener(this);
         mIvCancelPay.setOnClickListener(this);
         mTvConfirmCount.setText("杭州地铁单程票" + mCount + " 张");
         mTvConfirmMoneyAmount.setText(money * mCount + "元");
+        mTvConfirmPhone.setText(mUserPhone);
         mPopupConfirmPayWindow.showAtLocation(MainActivity.this.findViewById(R.id.activity_main), Gravity.BOTTOM, 0, 0);
     }
 
@@ -255,11 +241,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             //退出登录
             case R.id.layout_exit:
-                //获取SharedPreferences中的登录状态 存储至isLogin
-                isLogin = (Boolean) SharedPreferencesUtils.get(this, Constants.KEY_LOGIN_STATUS, Constants.TYPE_BOOLEAN);
-                Log.d("bmob","isLogin:"+isLogin);
                 //若为登录状态，则跳出弹出框询问是否真的要退出，以免用户重复登录
-                if(isLogin){
+                if(mCurUser!=null){
                     AlertDialog.Builder publicDialog = new AlertDialog.Builder(MainActivity.this);
                     publicDialog.setTitle("提示");
                     publicDialog.setIcon(R.drawable.reminder);
@@ -268,8 +251,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     publicDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            //将当前状态存储至SharedPreferences，登录状态为未登录（false）
-                            SharedPreferencesUtils.save(MainActivity.this, Constants.KEY_LOGIN_STATUS, false);
                             //清除缓存用户对象
                             BmobUser.logOut();
                             //启动登录界面的活动
@@ -289,10 +270,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             //购票记录
             case R.id.order_list:
-                //获取SharedPreferences中的登录状态 存储至isLogin
-                isLogin = (Boolean) SharedPreferencesUtils.get(this, Constants.KEY_LOGIN_STATUS, Constants.TYPE_BOOLEAN);
 //                //若为非登录状态，则启动登录界面的活动
-                if (isLogin == false) {
+                if (mCurUser==null) {
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 }
                 else {
@@ -328,15 +307,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             //支付按钮
             case R.id.pay_btn:
-                //获取SharedPreferences中的登录状态 存储至isLogin
-                isLogin = (Boolean) SharedPreferencesUtils.get(this, Constants.KEY_LOGIN_STATUS, Constants.TYPE_BOOLEAN);
                 //若为非登录状态，则启动登录界面的活动
-                if (isLogin == false) {
+                if (mCurUser==null) {
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 }
                 //否则跳至支付详情界面
                 else {
                     showPopupConfirmPayWindow();
+
                 }
                 break;
             case R.id.btn_confirm:
@@ -381,7 +359,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             mBundle.putInt("ticketCount", mCount);
                             //exp: 2016-12-21 20:51:18
                             mBundle.putString("orderCreatedTime", mCurOrder.getCreatedAt());
-                            mBundle.putString("orderID", s);
 
                             Intent intent = new Intent();
                             intent.setClass(MainActivity.this, PayDetailActivity.class);
