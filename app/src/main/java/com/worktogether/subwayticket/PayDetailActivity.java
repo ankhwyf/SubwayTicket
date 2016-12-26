@@ -59,7 +59,7 @@ public class PayDetailActivity extends AppCompatActivity implements View.OnClick
         String orderID = mBundle.getString("orderID");
 
         // 出发站-到达站
-        String departToArriveStation = departStation + "-" + arriveStation;
+        String departToArriveStation = departStation + " -- " + arriveStation;
         // 地铁票截止时间
         String dueDate = "";
         try {
@@ -104,14 +104,16 @@ public class PayDetailActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View view){
         switch(view.getId()){
             case R.id.details_title_back:
-//                //启动主界面(购票界面)的活动
-//                startActivity(new Intent(PayDetailActivity.this, MainActivity.class));
-                //启动历史记录界面的活动
                 finish();
                 break;
             default:
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
     }
 
 }

@@ -3,6 +3,8 @@ package com.worktogether.subwayticket;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,6 +28,7 @@ import cn.bmob.v3.listener.QueryListener;
 
 public class OrderHistoryActivity extends AppCompatActivity implements View.OnClickListener {
 
+    // 当前登录用户
     private BmobUser mCurUser;
     private final static String HISTORY = "order_history";
     // "未取票"Tab
@@ -39,6 +42,7 @@ public class OrderHistoryActivity extends AppCompatActivity implements View.OnCl
     // "返回"按钮
     private LinearLayout historyTitleBack;
 
+    // 分别用于存储"全部"历史记录/"未取票"历史记录
     public static List<OrderHistory> historyAllTicketList = new ArrayList<OrderHistory>();
     public static List<OrderHistory> historyNoTicketList = new ArrayList<OrderHistory>();
 
@@ -47,33 +51,30 @@ public class OrderHistoryActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_history);
 
+        // 指向当前登录用户
         mCurUser = BmobUser.getCurrentUser();
 
+        // 清空列表内的数据
+        historyAllTicketList.clear();
+        historyNoTicketList.clear();
+
+        // 查询当前登录用户的所有历史记录
         queryHistoryAll();
 
         findViews();
 
+        // 各个监听事件
         initListener();
-
     }
 
-    private void showNoTicketFragment(){
-        // 默认显示"未取票"碎片
-        noTicketFragment = new HistoryNoTicketFragment();
-        FragmentManager noTicketFragmentManager = getFragmentManager();
-        FragmentTransaction noTicketTransaction = noTicketFragmentManager.beginTransaction();
-        noTicketTransaction.add(R.id.ticketFrameLayout, noTicketFragment);
-        noTicketTransaction.commit();
-    }
     private void findViews() {
-// "未取票"Tab/"全部"Tab/"返回"按钮
+        // "未取票"Tab/"全部"Tab/"返回"按钮
         historyNoTicket = (TextView) findViewById(R.id.history_noticket);
         historyAll = (TextView) findViewById(R.id.history_all);
         historyTitleBack = (LinearLayout) findViewById(R.id.history_title_back);
     }
 
     private void initListener() {
-
         // "未取票"Tab的事件监听
         historyNoTicket.setOnClickListener(this);
         // "全部"Tab的事件监听
@@ -83,6 +84,7 @@ public class OrderHistoryActivity extends AppCompatActivity implements View.OnCl
     }
 
     public void onClick(View view) {
+        int color= ContextCompat.getColor(OrderHistoryActivity.this, R.color.colorLightBlue);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         switch (view.getId()) {
@@ -91,6 +93,8 @@ public class OrderHistoryActivity extends AppCompatActivity implements View.OnCl
                 if (noTicketFragment == null) {
                     noTicketFragment = new HistoryNoTicketFragment();
                 }
+                historyNoTicket.setTextColor(color);
+               historyAll.setTextColor(Color.argb(255,85,85,85));
                 fragmentTransaction.replace(R.id.ticketFrameLayout, noTicketFragment);
                 break;
             // "全部"Tab
@@ -98,6 +102,8 @@ public class OrderHistoryActivity extends AppCompatActivity implements View.OnCl
                 if (allFragment == null) {
                     allFragment = new HistoryAllFragment();
                 }
+                historyNoTicket.setTextColor(Color.argb(255,85,85,85));
+                historyAll.setTextColor(color);
                 fragmentTransaction.replace(R.id.ticketFrameLayout, allFragment);
                 break;
             // "返回"按钮
@@ -118,11 +124,10 @@ public class OrderHistoryActivity extends AppCompatActivity implements View.OnCl
         // 当前用户的手机号
 
         String user_phone = mCurUser.getMobilePhoneNumber();
-//        Log.i("bmob from all ", user_phone);
 
         allQuery.addWhereEqualTo("user_phone", user_phone);
         allQuery.setLimit(60);
-        //Log.i("bmob from all ", String.valueOf(allQuery));
+
         // 执行查询方法
         allQuery.findObjectsByTable(new QueryListener<JSONArray>() {
             @Override
@@ -157,12 +162,26 @@ public class OrderHistoryActivity extends AppCompatActivity implements View.OnCl
                             e1.printStackTrace();
                         }
                     }
+                    // 默认显示"未取票"碎片
                     showNoTicketFragment();
                 } else {
                     Log.i("bmob", "失败：from all " + e.toString());
                 }
             }
         });
+    }
+
+    private void showNoTicketFragment(){
+
+        // 默认显示"未取票"碎片
+
+        noTicketFragment = new HistoryNoTicketFragment();
+        FragmentManager noTicketFragmentManager = getFragmentManager();
+        FragmentTransaction noTicketTransaction = noTicketFragmentManager.beginTransaction();
+        int color= ContextCompat.getColor(OrderHistoryActivity.this, R.color.colorLightBlue);
+        historyNoTicket.setTextColor(color);
+        noTicketTransaction.add(R.id.ticketFrameLayout, noTicketFragment);
+        noTicketTransaction.commit();
     }
 
 }

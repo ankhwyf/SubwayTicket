@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mCurUser = BmobUser.getCurrentUser();
         // 关联控件
         findViews();
         //监听事件
@@ -101,9 +102,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    protected void onResume() {
+    protected void onResume(){
         super.onResume();
-
         //获取当前用户
         mCurUser = BmobUser.getCurrentUser();
     }
