@@ -3,6 +3,8 @@ package com.worktogether.subwayticket;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -82,6 +84,7 @@ public class OrderHistoryActivity extends AppCompatActivity implements View.OnCl
     }
 
     public void onClick(View view) {
+        int color= ContextCompat.getColor(OrderHistoryActivity.this, R.color.colorLightBlue);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         switch (view.getId()) {
@@ -90,6 +93,8 @@ public class OrderHistoryActivity extends AppCompatActivity implements View.OnCl
                 if (noTicketFragment == null) {
                     noTicketFragment = new HistoryNoTicketFragment();
                 }
+                historyNoTicket.setTextColor(color);
+               historyAll.setTextColor(Color.argb(255,85,85,85));
                 fragmentTransaction.replace(R.id.ticketFrameLayout, noTicketFragment);
                 break;
             // "全部"Tab
@@ -97,11 +102,12 @@ public class OrderHistoryActivity extends AppCompatActivity implements View.OnCl
                 if (allFragment == null) {
                     allFragment = new HistoryAllFragment();
                 }
+                historyNoTicket.setTextColor(Color.argb(255,85,85,85));
+                historyAll.setTextColor(color);
                 fragmentTransaction.replace(R.id.ticketFrameLayout, allFragment);
                 break;
             // "返回"按钮
             case R.id.history_title_back:
-//                startActivity(new Intent(OrderHistoryActivity.this, MainActivity.class));
                 finish();
                 break;
             default:
@@ -166,17 +172,16 @@ public class OrderHistoryActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void showNoTicketFragment(){
+
         // 默认显示"未取票"碎片
+
         noTicketFragment = new HistoryNoTicketFragment();
         FragmentManager noTicketFragmentManager = getFragmentManager();
         FragmentTransaction noTicketTransaction = noTicketFragmentManager.beginTransaction();
+        int color= ContextCompat.getColor(OrderHistoryActivity.this, R.color.colorLightBlue);
+        historyNoTicket.setTextColor(color);
         noTicketTransaction.add(R.id.ticketFrameLayout, noTicketFragment);
         noTicketTransaction.commit();
     }
-
-//    @Override
-//    protected void onDestroy(){
-//        super.onDestroy();
-//    }
 
 }

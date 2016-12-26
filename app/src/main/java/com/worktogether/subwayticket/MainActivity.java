@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mCurUser = BmobUser.getCurrentUser();
         // 关联控件
         findViews();
         //监听事件
@@ -103,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume(){
         super.onResume();
-
         //获取当前用户
         mCurUser = BmobUser.getCurrentUser();
     }
@@ -382,8 +382,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             Intent intent = new Intent();
                             intent.setClass(MainActivity.this, PayDetailActivity.class);
                             intent.putExtras(mBundle);
+                            mPopupConfirmPayWindow.dismiss();
                             startActivity(intent);
-
                         } else {
                             Log.d("bmob", "失败" + e.getMessage() + "," + e.getErrorCode());
                         }
