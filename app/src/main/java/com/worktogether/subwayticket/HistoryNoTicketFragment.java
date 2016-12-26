@@ -84,8 +84,7 @@ public class HistoryNoTicketFragment extends Fragment {
                 viewHolder = new ViewHolder();
                 viewHolder.departToArrive = (TextView) view.findViewById(R.id.noticket_depart_to_arrive);
                 viewHolder.ticketStatus = (TextView) view.findViewById(R.id.noticket_status);
-                viewHolder.ticketNum = (TextView) view.findViewById(R.id.noticket_num);
-                viewHolder.ticketPrice = (TextView) view.findViewById(R.id.noticket_price);
+                viewHolder.ticketCountPrice = (TextView) view.findViewById(R.id.tv_count_price);
                 viewHolder.ticketCreatedTime = (TextView) view.findViewById(R.id.noticket_nowtime);
                 view.setTag(viewHolder);
             } else {
@@ -100,7 +99,9 @@ public class HistoryNoTicketFragment extends Fragment {
             String ticketNum = changeTicketNum(orderHistory.getTicket_count());
             // 订单总金额
             String ticketPrice = changeTicketPrice(orderHistory.getTicket_price(), orderHistory.getTicket_count());
-            // 订单生成时间
+
+            String ticketCountPrice=ticketNum+" | "+ticketPrice;
+             // 订单生成时间
             String ticketCreatedTime = orderHistory.getCreateAt();
             String[] date = ticketCreatedTime.split(" ");
 
@@ -110,8 +111,7 @@ public class HistoryNoTicketFragment extends Fragment {
 
             viewHolder.departToArrive.setText(departToArrive);
             viewHolder.ticketStatus.setText(ticketStatus);
-            viewHolder.ticketNum.setText(ticketNum);
-            viewHolder.ticketPrice.setText(ticketPrice);
+            viewHolder.ticketCountPrice.setText(ticketCountPrice);
             viewHolder.ticketCreatedTime.setText(date[0]);
 
             return view;
@@ -121,8 +121,7 @@ public class HistoryNoTicketFragment extends Fragment {
         class ViewHolder {
             TextView departToArrive;
             TextView ticketStatus;
-            TextView ticketNum;
-            TextView ticketPrice;
+            TextView ticketCountPrice;
             TextView ticketCreatedTime;
         }
 

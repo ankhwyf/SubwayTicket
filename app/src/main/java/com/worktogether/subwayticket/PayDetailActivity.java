@@ -83,7 +83,7 @@ public class PayDetailActivity extends AppCompatActivity implements View.OnClick
         // 把数据添加到界面中的TextView中
         departToArrive.setText(departToArriveStation);
         ticketPrice.setText(Double.toString(totalMoney));
-        ticketNum.setText(ticketCount + "");
+        ticketNum.setText(ticketCount + " | ");
         ticketDueDate.setText(dueDate);
         // 把出发站/到达站/总金额/张数/订单生成时间/订单Id全部用于生成二维码，但只把订单id显示在界面中
         QRCodeStr.setText(orderID);

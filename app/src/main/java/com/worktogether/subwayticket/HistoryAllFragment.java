@@ -82,8 +82,7 @@ public class HistoryAllFragment extends Fragment {
                 viewHolder = new ViewHolder();
                 viewHolder.departToArrive = (TextView) view.findViewById(R.id.all_depart_to_arrive);
                 viewHolder.ticketStatus = (TextView) view.findViewById(R.id.all_status);
-                viewHolder.ticketNum = (TextView) view.findViewById(R.id.all_num);
-                viewHolder.ticketPrice = (TextView) view.findViewById(R.id.all_price);
+                viewHolder.ticketCountPrice = (TextView) view.findViewById(R.id.tv_count_price);
                 viewHolder.ticketCreatedTime = (TextView) view.findViewById(R.id.all_nowtime);
                 view.setTag(viewHolder);
             } else {
@@ -98,6 +97,8 @@ public class HistoryAllFragment extends Fragment {
             String ticketNum = changeTicketNum(orderHistory.getTicket_count());
             // 订单总金额
             String ticketPrice = changeTicketPrice(orderHistory.getTicket_price(), orderHistory.getTicket_count());
+
+            String ticketCountPrice=ticketNum+ " | "+ticketPrice;
             // 订单生成时间
             String ticketCreatedTime = orderHistory.getCreateAt();
             String[] date = ticketCreatedTime.split(" ");
@@ -106,11 +107,9 @@ public class HistoryAllFragment extends Fragment {
             // 若地铁票的状态为"未取票"，则设置字体颜色为蓝色
             if (orderHistory.getTicket_status() == 0)
                 viewHolder.ticketStatus.setTextColor(viewHolder.ticketStatus.getResources().getColor(R.color.colorLightBlue));
-
             viewHolder.departToArrive.setText(departToArrive);
             viewHolder.ticketStatus.setText(ticketStatus);
-            viewHolder.ticketNum.setText(ticketNum);
-            viewHolder.ticketPrice.setText(ticketPrice);
+            viewHolder.ticketCountPrice.setText(ticketCountPrice);
             viewHolder.ticketCreatedTime.setText(date[0]);
 
             return view;
@@ -120,8 +119,7 @@ public class HistoryAllFragment extends Fragment {
         public class ViewHolder {
             TextView departToArrive;
             TextView ticketStatus;
-            TextView ticketNum;
-            TextView ticketPrice;
+            TextView ticketCountPrice;
             TextView ticketCreatedTime;
         }
 
