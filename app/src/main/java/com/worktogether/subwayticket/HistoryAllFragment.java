@@ -3,7 +3,6 @@ package com.worktogether.subwayticket;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -161,6 +160,5 @@ public class HistoryAllFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
     }
-
 
 }
